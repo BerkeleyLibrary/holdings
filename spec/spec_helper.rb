@@ -1,15 +1,27 @@
-# frozen_string_literal: true
+# ------------------------------------------------------------
+# Simplecov
 
-require "berkeley_library/holdings"
+require 'colorize'
+require 'simplecov' if ENV['COVERAGE']
+
+# ------------------------------------------------------------
+# RSpec
+
+require 'webmock/rspec'
 
 RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
-
-  # Disable RSpec exposing methods globally on `Module` and `main`
-  config.disable_monkey_patching!
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
+  config.color = true
+  config.tty = true
+  config.formatter = :documentation
+  config.before { WebMock.disable_net_connect!(allow_localhost: true) }
+  config.after { WebMock.allow_net_connect! }
+  config.mock_with :rspec do |mocks|
+    mocks.verify_partial_doubles = true
   end
+  config.shared_context_metadata_behavior = :apply_to_host_groups
 end
+
+# ------------------------------------------------------------
+# Code under test
+
+require 'berkeley_library/holdings'
