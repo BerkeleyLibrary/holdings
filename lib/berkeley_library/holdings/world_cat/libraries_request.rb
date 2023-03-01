@@ -9,7 +9,6 @@ module BerkeleyLibrary
     module WorldCat
       # @see https://developer.api.oclc.org/wcv1#/Holdings
       class LibrariesRequest
-        include BerkeleyLibrary::Logging
         include BerkeleyLibrary::Util
 
         XPATH_INST_ID_VALS = '/holdings/holding/institutionIdentifier/value'.freeze
@@ -38,9 +37,6 @@ module BerkeleyLibrary
           response = RestClient.get(uri.to_s, { params: })
           holdings_syms = holdings_from(response.body)
           holdings_syms.select { |sym| symbols.include?(sym) } # just in case
-        rescue StandardError => e
-          logger.warn("Error retrieving holdings for #{oclc_number.inspect}, symbols: #{symbols.inspect}", e)
-          []
         end
 
         private

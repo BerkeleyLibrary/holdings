@@ -162,53 +162,6 @@ module BerkeleyLibrary
             holdings_actual = req.execute
             expect(holdings_actual).to be_empty
           end
-
-          describe 'error handling' do
-
-            attr_reader :logger
-
-            before do
-              @logger = instance_double(BerkeleyLibrary::Logging::Logger)
-              allow(BerkeleyLibrary::Logging).to receive(:logger).and_return(logger)
-            end
-
-            context('HTTP errors') do
-              it 'logs the error and returns an empty list' do
-                req = LibrariesRequest.new(oclc_number)
-
-                stub_request(:get, req.uri)
-                  .with(query: hash_including({}))
-                  .to_return(status: 503)
-
-                expect(logger).to receive(:warn).with(
-                  a_string_including(oclc_number),
-                  instance_of(RestClient::ServiceUnavailable)
-                )
-
-                holdings_actual = req.execute
-                expect(holdings_actual).to eq([])
-              end
-            end
-
-            context('bad data') do
-              it 'logs the error and returns an empty list' do
-                req = LibrariesRequest.new(oclc_number)
-
-                stub_request(:get, req.uri)
-                  .with(query: hash_including({}))
-                  .to_return(body: '<?xml encoding="martian">')
-
-                expect(logger).to receive(:warn).with(
-                  include(oclc_number),
-                  instance_of(Nokogiri::XML::SyntaxError)
-                )
-
-                holdings_actual = req.execute
-                expect(holdings_actual).to eq([])
-              end
-            end
-
-          end
         end
       end
     end

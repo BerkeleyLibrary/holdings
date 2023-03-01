@@ -1,3 +1,4 @@
+require 'berkeley_library/logging'
 require 'berkeley_library/holdings/oclc_number'
 require 'berkeley_library/holdings/holdings_result'
 require 'berkeley_library/holdings/world_cat/libraries_request'
@@ -7,6 +8,7 @@ require 'berkeley_library/holdings/hathi_trust/record_url_request'
 module BerkeleyLibrary
   module Holdings
     class HoldingsRequest
+      include BerkeleyLibrary::Logging
 
       attr_reader :oclc_number, :wc_req, :ht_req
 
@@ -22,10 +24,12 @@ module BerkeleyLibrary
       end
 
       def execute
-        wc_symbols = (wc_req.execute if wc_req)
-        ht_record_url = (ht_req.execute if ht_req)
+        params = {}.tap do |res|
+          populate_wc_result(res)
+          populate_ht_result(res)
+        end
 
-        HoldingsResult.new(wc_symbols, ht_record_url)
+        HoldingsResult.new(**params)
       end
 
       def wc_symbols
@@ -45,6 +49,28 @@ module BerkeleyLibrary
       end
 
       private
+
+      # TODO: something less clunky
+      def populate_wc_result(result)
+        return unless wc_req
+
+        result[:wc_symbols] = wc_req.execute
+      rescue StandardError => e
+        logger.warn("Error retrieving WorldCat holdings for #{oclc_number.inspect}, symbols: #{wc_symbols.inspect}", e)
+
+        result[:wc_error] = e
+      end
+
+      # TODO: something less clunky
+      def populate_ht_result(result)
+        return unless ht_req
+
+        result[:ht_record_url] = ht_req.execute
+      rescue StandardError => e
+        logger.warn("Error retrieving HathiTrust record URL for #{oclc_number.inspect}", e)
+
+        result[:ht_error] = e
+      end
 
       def ht_req_for(oclc_number, include_ht)
         return unless include_ht

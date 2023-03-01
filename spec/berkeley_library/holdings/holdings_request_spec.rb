@@ -143,6 +143,7 @@ module BerkeleyLibrary
           expect(holdings_result.ht_record_url).to eq(url_expected)
         end
 
+        # rubocop:disable RSpec/ExampleLength
         describe 'error handling' do
 
           attr_reader :logger
@@ -171,7 +172,9 @@ module BerkeleyLibrary
 
             holdings_result = req.execute
             expect(holdings_result.wc_symbols).to be_empty
+            expect(holdings_result.wc_error).to be_a(RestClient::ServiceUnavailable)
             expect(holdings_result.ht_record_url).to eq(url_expected)
+            expect(holdings_result.ht_error).to be_nil
           end
 
           it 'returns WorldCat results even in the event of a Hathi error' do
@@ -200,10 +203,69 @@ module BerkeleyLibrary
 
             holdings_result = req.execute
             expect(holdings_result.wc_symbols).to contain_exactly(*holdings_expected)
+            expect(holdings_result.wc_error).to be_nil
             expect(holdings_result.ht_record_url).to be_nil
+            expect(holdings_result.ht_error).to be_a(RestClient::ServiceUnavailable)
+          end
+
+          it 'handles bad WorldCat data' do
+            records_json = File.read('spec/data/hathi_trust/10045193.json')
+            url_expected = 'https://catalog.hathitrust.org/Record/102321413'
+
+            symbols = WorldCat::Symbols::RLF
+            req = HoldingsRequest.new(oclc_number, wc_symbols: symbols)
+
+            stub_request(:get, req.wc_uri)
+              .with(query: hash_including({}))
+              .to_return(body: '<?xml encoding="martian">')
+
+            stub_request(:get, req.ht_uri).to_return(body: records_json)
+
+            expect(logger).to receive(:warn).with(
+              a_string_including(oclc_number),
+              instance_of(Nokogiri::XML::SyntaxError)
+            )
+
+            holdings_result = req.execute
+            expect(holdings_result.wc_symbols).to be_empty
+            expect(holdings_result.wc_error).to be_a(Nokogiri::XML::SyntaxError)
+            expect(holdings_result.ht_record_url).to eq(url_expected)
+            expect(holdings_result.ht_error).to be_nil
+          end
+
+          it 'handles bad HathiTrust data' do
+            holdings_xml = File.read('spec/data/worldcat/10045193-all.xml')
+            holdings_expected = %w[CLU CUY]
+
+            req = HoldingsRequest.new(oclc_number)
+
+            symbols = WorldCat::Symbols::ALL
+            params = {
+              oclcsymbol: symbols.join(','),
+              servicelevel: 'full',
+              frbrGrouping: 'off',
+              wskey: wc_api_key
+            }
+
+            stub_request(:get, req.wc_uri)
+              .with(query: params).to_return(body: holdings_xml)
+
+            stub_request(:get, req.ht_uri).to_return(body: 'I am not a JSON object')
+
+            expect(logger).to receive(:warn).with(
+              a_string_including(oclc_number),
+              instance_of(JSON::ParserError)
+            )
+
+            holdings_result = req.execute
+            expect(holdings_result.wc_symbols).to contain_exactly(*holdings_expected)
+            expect(holdings_result.wc_error).to be_nil
+            expect(holdings_result.ht_record_url).to be_nil
+            expect(holdings_result.ht_error).to be_a(JSON::ParserError)
           end
 
         end
+        # rubocop:enable RSpec/ExampleLength
       end
     end
   end

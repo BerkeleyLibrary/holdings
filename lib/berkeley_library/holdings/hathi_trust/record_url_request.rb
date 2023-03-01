@@ -8,7 +8,6 @@ module BerkeleyLibrary
     module HathiTrust
       class RecordUrlRequest
         include BerkeleyLibrary::Util
-        include BerkeleyLibrary::Logging
 
         attr_reader :oclc_number
 
@@ -19,10 +18,6 @@ module BerkeleyLibrary
         def execute
           response = RestClient.get(uri.to_s)
           record_url_from(response.body, oclc_number)
-        rescue StandardError => e
-          logger.warn("Error HathiTrust record URL for #{oclc_number.inspect}", e)
-
-          nil
         end
 
         def uri
