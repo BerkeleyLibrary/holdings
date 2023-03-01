@@ -1,6 +1,6 @@
 require 'berkeley_library/holdings/oclc_number'
 require 'berkeley_library/holdings/holdings_result'
-require 'berkeley_library/holdings/world_cat/holdings_request'
+require 'berkeley_library/holdings/world_cat/libraries_request'
 require 'berkeley_library/holdings/world_cat/symbols'
 require 'berkeley_library/holdings/hathi_trust/record_url_request'
 
@@ -55,7 +55,7 @@ module BerkeleyLibrary
       def wc_req_for(oclc_number, symbols)
         return unless symbols && symbols.any?
 
-        WorldCat::HoldingsRequest.new(oclc_number, symbols:)
+        WorldCat::LibrariesRequest.new(oclc_number, symbols:)
       end
 
     end

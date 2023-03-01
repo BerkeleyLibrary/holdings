@@ -8,7 +8,7 @@ module BerkeleyLibrary
   module Holdings
     module WorldCat
       # @see https://developer.api.oclc.org/wcv1#/Holdings
-      class HoldingsRequest
+      class LibrariesRequest
         include BerkeleyLibrary::Logging
         include BerkeleyLibrary::Util
 

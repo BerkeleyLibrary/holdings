@@ -1,7 +1,7 @@
 module BerkeleyLibrary
   module Holdings
     module WorldCat
-      describe HoldingsRequest do
+      describe LibrariesRequest do
         let(:oclc_number) { '85833285' }
         let(:wc_base_url) { 'https://www.example.test/webservices/' }
         let(:wc_api_key) { '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw' }
@@ -18,22 +18,22 @@ module BerkeleyLibrary
         describe :new do
           describe :oclc_number do
             it 'accepts a valid OCLC number' do
-              q = HoldingsRequest.new(oclc_number)
+              q = LibrariesRequest.new(oclc_number)
               expect(q.oclc_number).to eq(oclc_number)
             end
 
             it 'rejects nil' do
-              expect { HoldingsRequest.new(nil) }.to raise_error(ArgumentError)
+              expect { LibrariesRequest.new(nil) }.to raise_error(ArgumentError)
             end
 
             it 'rejects the empty string' do
-              expect { HoldingsRequest.new('') }.to raise_error(ArgumentError)
+              expect { LibrariesRequest.new('') }.to raise_error(ArgumentError)
             end
 
             it 'rejects blank strings' do
               aggregate_failures do
                 ["\t", ' ', "\r\n"].each do |bad_oclc_number|
-                  expect { HoldingsRequest.new(bad_oclc_number) }.to raise_error(ArgumentError)
+                  expect { LibrariesRequest.new(bad_oclc_number) }.to raise_error(ArgumentError)
                 end
               end
             end
@@ -41,7 +41,7 @@ module BerkeleyLibrary
             it 'rejects non-strings' do
               aggregate_failures do
                 [Object.new, 85833285].each do |bad_oclc_number|
-                  expect { HoldingsRequest.new(bad_oclc_number) }.to raise_error(ArgumentError)
+                  expect { LibrariesRequest.new(bad_oclc_number) }.to raise_error(ArgumentError)
                 end
               end
             end
@@ -49,21 +49,21 @@ module BerkeleyLibrary
 
           describe :symbols do
             it 'defaults to ALL' do
-              q = HoldingsRequest.new(oclc_number)
+              q = LibrariesRequest.new(oclc_number)
               expect(q.symbols).to eq(Symbols::ALL)
             end
 
             it 'rejects an empty array' do
-              expect { HoldingsRequest.new(oclc_number, symbols: []) }.to raise_error(ArgumentError)
+              expect { LibrariesRequest.new(oclc_number, symbols: []) }.to raise_error(ArgumentError)
             end
 
             it 'rejects a non-array' do
-              expect { HoldingsRequest.new(oclc_number, symbols: Symbols::ALL.join(',')) }.to raise_error(ArgumentError)
+              expect { LibrariesRequest.new(oclc_number, symbols: Symbols::ALL.join(',')) }.to raise_error(ArgumentError)
             end
 
             it 'rejects an array containing nonexistent symbols' do
               bad_symbols = [Symbols::NRLF, ['not a WorldCat institution symbol'], Symbols::SRLF].flatten
-              expect { HoldingsRequest.new(oclc_number, symbols: bad_symbols) }.to raise_error(ArgumentError)
+              expect { LibrariesRequest.new(oclc_number, symbols: bad_symbols) }.to raise_error(ArgumentError)
             end
           end
         end
@@ -71,7 +71,7 @@ module BerkeleyLibrary
         describe :uri do
           it 'returns the URI for the specified OCLC number' do
             uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number}")
-            uri_actual = HoldingsRequest.new(oclc_number).uri
+            uri_actual = LibrariesRequest.new(oclc_number).uri
             expect(uri_actual).to eq(uri_expected)
           end
         end
@@ -89,7 +89,7 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            req = HoldingsRequest.new(oclc_number)
+            req = LibrariesRequest.new(oclc_number)
 
             stub_request(:get, req.uri)
               .with(query: params).to_return(body: holdings_xml)
@@ -110,7 +110,7 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            req = HoldingsRequest.new(oclc_number, symbols:)
+            req = LibrariesRequest.new(oclc_number, symbols:)
 
             stub_request(:get, req.uri)
               .with(query: params).to_return(body: holdings_xml)
@@ -133,7 +133,7 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            req = HoldingsRequest.new(oclc_number, symbols:)
+            req = LibrariesRequest.new(oclc_number, symbols:)
 
             stub_request(:get, req.uri)
               .with(query: params).to_return(body: holdings_xml)
@@ -154,7 +154,7 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            req = HoldingsRequest.new(oclc_number, symbols:)
+            req = LibrariesRequest.new(oclc_number, symbols:)
 
             stub_request(:get, req.uri)
               .with(query: params).to_return(body: holdings_xml)
@@ -174,7 +174,7 @@ module BerkeleyLibrary
 
             context('HTTP errors') do
               it 'logs the error and returns an empty list' do
-                req = HoldingsRequest.new(oclc_number)
+                req = LibrariesRequest.new(oclc_number)
 
                 stub_request(:get, req.uri)
                   .with(query: hash_including({}))
@@ -192,7 +192,7 @@ module BerkeleyLibrary
 
             context('bad data') do
               it 'logs the error and returns an empty list' do
-                req = HoldingsRequest.new(oclc_number)
+                req = LibrariesRequest.new(oclc_number)
 
                 stub_request(:get, req.uri)
                   .with(query: hash_including({}))
