@@ -48,7 +48,7 @@ module BerkeleyLibrary
         def holdings_from(xml)
           xml_doc = Nokogiri::XML(xml)
           id_vals = xml_doc.xpath(XPATH_INST_ID_VALS)
-          id_vals.filter_map { |value| value.text&.strip }
+          id_vals.filter_map { |value| value.text.strip }
         end
       end
     end

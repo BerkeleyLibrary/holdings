@@ -30,9 +30,7 @@ module BerkeleyLibrary
         end
 
         def default_hathitrust_base_uri
-          return unless (base_url = default_hathitrust_base_url)
-
-          uri_or_nil(base_url)
+          uri_or_nil(default_hathitrust_base_url)
         end
 
         def default_hathitrust_base_url

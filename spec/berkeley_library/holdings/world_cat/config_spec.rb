@@ -26,36 +26,58 @@ module BerkeleyLibrary
             expect(Config.api_key).to eq(expected_key)
           end
 
-          describe 'with Rails' do
-            let(:rails_key) { '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw' }
+          context 'with Rails' do
 
             before do
               expect(defined?(Rails)).to be_nil # just to be sure
 
               rails = double(Object)
               Object.send(:const_set, 'Rails', rails)
-
-              app = double(Object)
-              allow(rails).to receive(:application).and_return(app)
-
-              config = double(Object)
-              allow(app).to receive(:config).and_return(config)
-
-              allow(config).to receive(:worldcat_api_key).and_return(rails_key)
             end
 
             after do
               Object.send(:remove_const, 'Rails')
             end
 
-            it 'reads config.worldcat_api_key' do
-              expect(Config.api_key).to eq(rails_key)
+            context 'with full Rails config' do
+              let(:rails_key) { '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw' }
+
+              before do
+                app = double(Object)
+                allow(Rails).to receive(:application).and_return(app)
+
+                config = double(Object)
+                allow(app).to receive(:config).and_return(config)
+
+                allow(config).to receive(:worldcat_api_key).and_return(rails_key)
+              end
+
+              it 'reads config.worldcat_api_key' do
+                expect(Config.api_key).to eq(rails_key)
+              end
+
+              it 'prefers $LIT_WORLDCAT_API_KEY even when config.worldcat_api_key is present' do
+                expected_key = '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw'.reverse
+                allow(ENV).to receive(:[]).with('LIT_WORLDCAT_API_KEY').and_return(expected_key)
+                expect(Config.api_key).to eq(expected_key)
+              end
             end
 
-            it 'prefers $LIT_WORLDCAT_API_KEY even when config.worldcat_api_key is present' do
-              expected_key = '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw'.reverse
-              allow(ENV).to receive(:[]).with('LIT_WORLDCAT_API_KEY').and_return(expected_key)
-              expect(Config.api_key).to eq(expected_key)
+            context 'with partial Rails config' do
+              it "doesn't blow up if Rails exists but has no application" do
+                allow(Rails).to receive(:application).and_return(nil)
+                expect(Config.api_key).to be_nil
+              end
+
+              it "doesn't blow up if Rails configuration does not include URL" do
+                app = double(Object)
+                allow(Rails).to receive(:application).and_return(app)
+
+                config = double(Object)
+                allow(app).to receive(:config).and_return(config)
+
+                expect(Config.api_key).to be_nil
+              end
             end
           end
         end
@@ -89,7 +111,7 @@ module BerkeleyLibrary
             expect(Config.base_uri).to eq(expected_uri)
           end
 
-          describe 'with Rails' do
+          context 'with Rails' do
             let(:rails_url) { 'https://www.worldcat.test/webservices' }
             let(:rails_uri) { URI.parse(rails_url) }
 
@@ -98,31 +120,58 @@ module BerkeleyLibrary
 
               rails = double(Object)
               Object.send(:const_set, 'Rails', rails)
-
-              app = double(Object)
-              allow(rails).to receive(:application).and_return(app)
-
-              config = double(Object)
-              allow(app).to receive(:config).and_return(config)
-
-              allow(config).to receive(:worldcat_base_url).and_return(rails_url)
             end
 
             after do
               Object.send(:remove_const, 'Rails')
             end
 
-            it 'reads config.worldcat_base_url' do
-              expect(Config.base_uri).to eq(rails_uri)
+            context 'with full Rails config' do
+              before do
+                app = double(Object)
+                allow(Rails).to receive(:application).and_return(app)
+
+                config = double(Object)
+                allow(app).to receive(:config).and_return(config)
+
+                allow(config).to receive(:worldcat_base_url).and_return(rails_url)
+              end
+
+              it 'reads config.worldcat_base_url' do
+                expect(Config.base_uri).to eq(rails_uri)
+              end
+
+              it 'prefers $LIT_WORLDCAT_BASE_URL even when config.worldcat_base_url is present' do
+                expected_url = 'https://www.worldcat.test/webservices/env'
+                allow(ENV).to receive(:[]).with('LIT_WORLDCAT_BASE_URL').and_return(expected_url)
+
+                expected_uri = URI.parse(expected_url)
+                expect(Config.base_uri).to eq(expected_uri)
+              end
             end
 
-            it 'prefers $LIT_WORLDCAT_BASE_URL even when config.worldcat_base_url is present' do
-              expected_url = 'https://www.worldcat.test/webservices/env'
-              allow(ENV).to receive(:[]).with('LIT_WORLDCAT_BASE_URL').and_return(expected_url)
+            context 'with partial Rails config' do
+              it "doesn't blow up if Rails exists but has no application" do
+                allow(Rails).to receive(:application).and_return(nil)
+                expect(Config.base_uri.to_s).to eq(Config::DEFAULT_WORLDCAT_BASE_URL)
+              end
 
-              expected_uri = URI.parse(expected_url)
-              expect(Config.base_uri).to eq(expected_uri)
+              it "doesn't blow up if Rails configuration does not include URL" do
+                app = double(Object)
+                allow(Rails).to receive(:application).and_return(app)
+
+                config = double(Object)
+                allow(app).to receive(:config).and_return(config)
+
+                expect(Config.base_uri.to_s).to eq(Config::DEFAULT_WORLDCAT_BASE_URL)
+              end
             end
+          end
+        end
+
+        describe :reset! do
+          it "doesn't blow up if nothing was ever set" do
+            expect { Config.send(:reset!) }.not_to raise_error
           end
         end
       end

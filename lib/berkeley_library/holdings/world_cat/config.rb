@@ -48,9 +48,7 @@ module BerkeleyLibrary
         end
 
         def default_worldcat_base_uri
-          return unless (base_url = default_worldcat_base_url)
-
-          uri_or_nil(base_url)
+          uri_or_nil(default_worldcat_base_url)
         end
 
         def default_worldcat_base_url

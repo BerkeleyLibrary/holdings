@@ -72,7 +72,7 @@ module BerkeleyLibrary
 
           req = HoldingsRequest.new(oclc_number, include_ht: false)
 
-          stub_request(:get, req.wc_uri)
+          stub_request(:get, req.wc_req.uri)
             .with(query: params).to_return(body: holdings_xml)
 
           holdings_result = req.execute
@@ -84,7 +84,7 @@ module BerkeleyLibrary
           url_expected = 'https://catalog.hathitrust.org/Record/102321413'
 
           req = HoldingsRequest.new(oclc_number, wc_symbols: [])
-          stub_request(:get, req.ht_uri).to_return(body: records_json)
+          stub_request(:get, req.ht_req.uri).to_return(body: records_json)
 
           holdings_result = req.execute
           expect(holdings_result.ht_record_url).to eq(url_expected)
@@ -107,10 +107,10 @@ module BerkeleyLibrary
             wskey: wc_api_key
           }
 
-          stub_request(:get, req.wc_uri)
+          stub_request(:get, req.wc_req.uri)
             .with(query: params).to_return(body: holdings_xml)
 
-          stub_request(:get, req.ht_uri).to_return(body: records_json)
+          stub_request(:get, req.ht_req.uri).to_return(body: records_json)
 
           holdings_result = req.execute
           expect(holdings_result.wc_symbols).to contain_exactly(*holdings_expected)
@@ -133,10 +133,10 @@ module BerkeleyLibrary
             wskey: wc_api_key
           }
 
-          stub_request(:get, req.wc_uri)
+          stub_request(:get, req.wc_req.uri)
             .with(query: params).to_return(body: holdings_xml)
 
-          stub_request(:get, req.ht_uri).to_return(body: records_json)
+          stub_request(:get, req.ht_req.uri).to_return(body: records_json)
 
           holdings_result = req.execute
           expect(holdings_result.wc_symbols).to be_empty
@@ -160,10 +160,10 @@ module BerkeleyLibrary
             symbols = WorldCat::Symbols::RLF
             req = HoldingsRequest.new(oclc_number, wc_symbols: symbols)
 
-            stub_request(:get, req.wc_uri)
+            stub_request(:get, req.wc_req.uri)
               .with(query: hash_including({})).to_return(status: 503)
 
-            stub_request(:get, req.ht_uri).to_return(body: records_json)
+            stub_request(:get, req.ht_req.uri).to_return(body: records_json)
 
             expect(logger).to receive(:warn).with(
               a_string_including(oclc_number),
@@ -191,10 +191,10 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            stub_request(:get, req.wc_uri)
+            stub_request(:get, req.wc_req.uri)
               .with(query: params).to_return(body: holdings_xml)
 
-            stub_request(:get, req.ht_uri).to_return(status: 503)
+            stub_request(:get, req.ht_req.uri).to_return(status: 503)
 
             expect(logger).to receive(:warn).with(
               a_string_including(oclc_number),
@@ -215,11 +215,11 @@ module BerkeleyLibrary
             symbols = WorldCat::Symbols::RLF
             req = HoldingsRequest.new(oclc_number, wc_symbols: symbols)
 
-            stub_request(:get, req.wc_uri)
+            stub_request(:get, req.wc_req.uri)
               .with(query: hash_including({}))
               .to_return(body: '<?xml encoding="martian">')
 
-            stub_request(:get, req.ht_uri).to_return(body: records_json)
+            stub_request(:get, req.ht_req.uri).to_return(body: records_json)
 
             expect(logger).to receive(:warn).with(
               a_string_including(oclc_number),
@@ -247,10 +247,10 @@ module BerkeleyLibrary
               wskey: wc_api_key
             }
 
-            stub_request(:get, req.wc_uri)
+            stub_request(:get, req.wc_req.uri)
               .with(query: params).to_return(body: holdings_xml)
 
-            stub_request(:get, req.ht_uri).to_return(body: 'I am not a JSON object')
+            stub_request(:get, req.ht_req.uri).to_return(body: 'I am not a JSON object')
 
             expect(logger).to receive(:warn).with(
               a_string_including(oclc_number),

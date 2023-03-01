@@ -46,6 +46,17 @@ module BerkeleyLibrary
             expect(url_actual).to be_nil
           end
 
+          it 'returns nil for an empty JSON response' do
+            oclc_number = '1152527909'
+            records_json = '{}'
+
+            req = RecordUrlRequest.new(oclc_number)
+            stub_request(:get, req.uri).to_return(body: records_json)
+
+            url_actual = req.execute
+            expect(url_actual).to be_nil
+          end
+
           # NOTE: HathiTrust *should* only return record URLs for items
           #       with the specified OCLC number, but we filter just in case.
           it 'returns nil when Hathi returns the wrong object' do

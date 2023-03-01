@@ -40,14 +40,6 @@ module BerkeleyLibrary
         !ht_req.nil?
       end
 
-      def wc_uri
-        wc_req&.uri
-      end
-
-      def ht_uri
-        ht_req&.uri
-      end
-
       private
 
       # TODO: something less clunky
