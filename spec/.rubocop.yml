@@ -9,6 +9,9 @@ Style/ClassAndModuleChildren:
 Style/MultilineBlockChain:
   Enabled: false
 
+Style/NumericLiterals:
+  Enabled: false
+
 Style/ParallelAssignment:
   Enabled: false
 

@@ -8,7 +8,6 @@ module BerkeleyLibrary
 
         def initialize(oclc_number, symbols = Symbols::ALL)
           @oclc_number = ensure_oclc_number!(oclc_number)
-
           @symbols = Symbols.ensure_valid!(symbols)
         end
 
@@ -21,6 +20,19 @@ module BerkeleyLibrary
           raise ArgumentError, "OCLC number #{oclc_number.inspect} must not be blank" if oclc_number.strip == ''
 
           oclc_number
+        end
+
+        def holdings_uri_for(oclc_number)
+          URIs.append(holdings_base_uri, oclc_number)
+        end
+
+        def params_for(symbols)
+          {
+            'oclcsymbol' => symbols.join(','),
+            'servicelevel' => 'full',
+            'frbrGrouping' => 'off',
+            'wskey' => api_key
+          }
         end
       end
     end
