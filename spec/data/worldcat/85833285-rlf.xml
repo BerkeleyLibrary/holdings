@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<holdings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.loc.gov/standards/iso20775/N121_ISOholdings_v4.xsd">
+<holding>
+<institutionIdentifier>
+<value>ZAP</value>
+<typeOrSource>
+<pointer>http://worldcat.org/registry/institutions/</pointer>
+</typeOrSource>
+</institutionIdentifier>
+<physicalLocation>University of California, NRLF</physicalLocation>
+<physicalAddress>
+<text>Richmond, CA 94804 United States</text>
+</physicalAddress>
+<electronicAddress>
+<text>https://www.worldcat.org/wcpa/oclc/85833285?page=frame&amp;url=http%3A%2F%2Foskicat.berkeley.edu%2Fsearch%2Fi9780374263690%26checksum%3D26ced03ddcec265a5a532c77e3acd6b6&amp;title=University+of+California%2C+NRLF&amp;linktype=opac&amp;detail=ZAP%3AUniversity+of+California%2C+NRLF%3AAcademic Library&amp;app=wcapi&amp;id=</text>
+</electronicAddress>
+<holdingSimple>
+<copiesSummary>
+<copiesCount>1</copiesCount>
+</copiesSummary>
+</holdingSimple>
+</holding>
+</holdings>
