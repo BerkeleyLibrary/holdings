@@ -29,8 +29,7 @@ module BerkeleyLibrary
             url_expected = 'https://catalog.hathitrust.org/Record/102321413'
 
             req = RecordUrlRequest.new(oclc_number)
-            stub_request(:get, req.uri)
-              .to_return(body: records_json)
+            stub_request(:get, req.uri).to_return(body: records_json)
 
             url_actual = req.execute
             expect(url_actual).to eq(url_expected)
@@ -41,8 +40,7 @@ module BerkeleyLibrary
             records_json = File.read('spec/data/hathi_trust/1152527909.json')
 
             req = RecordUrlRequest.new(oclc_number)
-            stub_request(:get, req.uri)
-              .to_return(body: records_json)
+            stub_request(:get, req.uri).to_return(body: records_json)
 
             url_actual = req.execute
             expect(url_actual).to be_nil
