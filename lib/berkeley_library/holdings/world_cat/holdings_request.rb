@@ -1,6 +1,8 @@
 require 'nokogiri'
 require 'rest-client'
 require 'berkeley_library/util'
+require 'berkeley_library/holdings/oclc_number'
+require 'berkeley_library/holdings/world_cat/symbols'
 
 module BerkeleyLibrary
   module Holdings

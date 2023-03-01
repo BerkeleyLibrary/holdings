@@ -117,7 +117,7 @@ module BerkeleyLibrary
             end
 
             it 'prefers $LIT_WORLDCAT_BASE_URL even when config.worldcat_base_url is present' do
-              expected_url = 'https://www.worldcat.test/webservices'
+              expected_url = 'https://www.worldcat.test/webservices/env'
               allow(ENV).to receive(:[]).with('LIT_WORLDCAT_BASE_URL').and_return(expected_url)
 
               expected_uri = URI.parse(expected_url)
