@@ -76,6 +76,8 @@
     <orderEntry type="library" scope="PROVIDED" name="rubocop-rspec (v2.4.0, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-prof (v0.17.0, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="ruby-progressbar (v1.11.0, RVM: ruby-3.1.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubyXL (v3.4.25, RVM: ruby-3.1.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="rubyzip (v2.3.2, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov (v0.22.0, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov-html (v0.12.3, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="simplecov_json_formatter (v0.1.4, RVM: ruby-3.1.2) [gem]" level="application" />
@@ -96,30 +98,16 @@
     <option name="myRootTask">
       <RakeTaskImpl id="rake">
         <subtasks>
-          <RakeTaskImpl description="Build berkeley_library-holdings-0.1.0.gem into the pkg directory" fullCommand="build" id="build" />
-          <RakeTaskImpl id="build">
-            <subtasks>
-              <RakeTaskImpl description="Generate SHA512 checksum if berkeley_library-holdings-0.1.0.gem into the checksums directory" fullCommand="build:checksum" id="checksum" />
-            </subtasks>
-          </RakeTaskImpl>
           <RakeTaskImpl id="bundle">
             <subtasks>
               <RakeTaskImpl description="Updates the ruby-advisory-db then runs bundle-audit" fullCommand="bundle:audit" id="audit" />
             </subtasks>
           </RakeTaskImpl>
-          <RakeTaskImpl description="Remove any temporary products" fullCommand="clean" id="clean" />
-          <RakeTaskImpl description="Remove any generated files" fullCommand="clobber" id="clobber" />
           <RakeTaskImpl description="Run all specs in spec directory, with coverage" fullCommand="coverage" id="coverage" />
+          <RakeTaskImpl description="Run tests, check test coverage, check code style, check for vulnerabilities, build gem" fullCommand="default" id="default" />
           <RakeTaskImpl description="Build berkeley_library-holdings.gemspec as berkeley_library-holdings-0.1.0.gem" fullCommand="gem" id="gem" />
-          <RakeTaskImpl description="Build and install berkeley_library-holdings-0.1.0.gem into system gems" fullCommand="install" id="install" />
-          <RakeTaskImpl id="install">
-            <subtasks>
-              <RakeTaskImpl description="Build and install berkeley_library-holdings-0.1.0.gem into system gems without network access" fullCommand="install:local" id="local" />
-            </subtasks>
-          </RakeTaskImpl>
           <RakeTaskImpl description="Run RuboCop with auto-correct, and output results to console" fullCommand="ra" id="ra" />
-          <RakeTaskImpl description="Create tag v0.1.0 and build and push berkeley_library-holdings-0.1.0.gem to rubygems.org" fullCommand="release[remote]" id="release[remote]" />
-          <RakeTaskImpl description="Run RuboCop / Run rubocop with HTML output" fullCommand="rubocop" id="rubocop" />
+          <RakeTaskImpl description="Run rubocop with HTML output" fullCommand="rubocop" id="rubocop" />
           <RakeTaskImpl id="rubocop">
             <subtasks>
               <RakeTaskImpl description="Autocorrect RuboCop offenses (only when it's safe)" fullCommand="rubocop:autocorrect" id="autocorrect" />
@@ -138,15 +126,6 @@
                   <RakeTaskImpl description="" fullCommand="ci:setup:spec_report_cleanup" id="spec_report_cleanup" />
                 </subtasks>
               </RakeTaskImpl>
-            </subtasks>
-          </RakeTaskImpl>
-          <RakeTaskImpl description="" fullCommand="default" id="default" />
-          <RakeTaskImpl description="" fullCommand="release" id="release" />
-          <RakeTaskImpl id="release">
-            <subtasks>
-              <RakeTaskImpl description="" fullCommand="release:guard_clean" id="guard_clean" />
-              <RakeTaskImpl description="" fullCommand="release:rubygem_push" id="rubygem_push" />
-              <RakeTaskImpl description="" fullCommand="release:source_control_push" id="source_control_push" />
             </subtasks>
           </RakeTaskImpl>
         </subtasks>
