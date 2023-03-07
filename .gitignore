@@ -16,7 +16,9 @@ Gemfile.lock
 # log files
 /log/*
 
-Gemfile.lock
+# Excel recovery files
+~*.xls
+~*.xlsx
 
 ############################################################
 # Generated ignores
@@ -218,7 +220,8 @@ flycheck_*.el
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
