@@ -55,16 +55,14 @@ module BerkeleyLibrary
       end
 
       def strval_from(cell)
-        return unless cell
-        return unless (v = cell.value)
-        return if (v_str = v.to_s).strip == ''
-
-        v_str
+        cell.value.to_s.tap do |v_str|
+          return if v_str.strip == ''
+        end
       end
 
       def oclc_col_index_from(ws)
         raise ArgumentError, 'Header row not found' unless (header_row = ws[0])
-        raise ArgumentError, "#{OCLC_COL_HEADER} column not found in #{row.size} columns" unless
+        raise ArgumentError, "#{OCLC_COL_HEADER} column not found in #{header_row.size} columns" unless
           (oclc_col_index = find_oclc_col_index(header_row))
 
         oclc_col_index
@@ -73,8 +71,7 @@ module BerkeleyLibrary
       def find_oclc_col_index(row)
         find_column_index(row) do |cell|
           next unless cell
-          next unless (v = cell.value)
-          next unless v.respond_to?(:strip)
+          next unless (v = strval_from(cell))
 
           v.strip == OCLC_COL_HEADER
         end
