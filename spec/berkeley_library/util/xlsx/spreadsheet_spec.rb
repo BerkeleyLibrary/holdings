@@ -197,6 +197,27 @@ module BerkeleyLibrary
             end
           end
 
+          describe :set_value_at do
+            it 'replaces an existing value' do
+              r_index = 0
+              c_index = 1
+              old_value = 'MMSID'
+              expect(ss.value_at(r_index, c_index)).to eq(old_value) # just to be sure
+              new_value = 'MMS ID'
+              ss.set_value_at(r_index, c_index, new_value)
+              expect(ss.value_at(r_index, c_index)).to eq(new_value) # just to be sure
+            end
+
+            it 'writes to a new column' do
+              r_index = 0
+              c_index = 2
+              expect(ss.value_at(r_index, c_index)).to be_nil # just to be sure
+              new_value = 'Help I am trapped in a spreadsheet'
+              ss.set_value_at(r_index, c_index, new_value)
+              expect(ss.value_at(r_index, c_index)).to eq(new_value) # just to be sure
+            end
+          end
+
           describe :save_as do
             def assert_values_equal(ss_expected, ss_actual)
               num_rows = ss_expected.row_count

@@ -1,5 +1,6 @@
 require 'marcel'
 require 'rubyXL'
+require 'rubyXL/convenience_methods/cell'
 require 'rubyXL/convenience_methods/worksheet'
 
 module BerkeleyLibrary
@@ -64,15 +65,6 @@ module BerkeleyLibrary
           end
         end
 
-        def ensure_column!(header)
-          cindex_existing = find_column_index_by_header(header)
-          return cindex_existing if cindex_existing
-
-          header_row.size.tap do |cindex_next|
-            worksheet.insert_cell(0, cindex_next, header)
-          end
-        end
-
         def cell_at(r_index, c_index)
           return unless (row = worksheet[r_index])
 
@@ -85,6 +77,14 @@ module BerkeleyLibrary
           cell.value
         end
 
+        def set_value_at(r_index, c_index, value)
+          if (cell = cell_at(r_index, c_index))
+            cell.change_contents(value)
+          else
+            worksheet.add_cell(r_index, c_index, value)
+          end
+        end
+
         def row_count
           worksheet.sheet_data.size
         end
@@ -93,6 +93,15 @@ module BerkeleyLibrary
           return 0 unless (row = worksheet[r_index])
 
           row.size
+        end
+
+        def ensure_column!(header)
+          c_index_existing = find_column_index_by_header(header)
+          return c_index_existing if c_index_existing
+
+          header_row.size.tap do |c_index_next|
+            worksheet.insert_cell(0, c_index_next, header)
+          end
         end
 
         private
