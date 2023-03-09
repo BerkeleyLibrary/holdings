@@ -86,19 +86,32 @@ module BerkeleyLibrary
             end
           end
 
-          describe :find_header_column_index do
-
+          describe :find_column_index_by_header do
             it 'finds the column index' do
               expected_headers = ['OCLC Number', 'MMSID']
               expected_headers.each_with_index do |h, i_expected|
-                i_actual = ss.find_header_column_index(h)
+                i_actual = ss.find_column_index_by_header(h)
                 expect(i_actual).to eq(i_expected)
               end
             end
 
             it 'returns nil for a nonexistent column' do
-              c_index = ss.find_header_column_index('not a header')
+              c_index = ss.find_column_index_by_header('not a header')
               expect(c_index).to be_nil
+            end
+          end
+
+          describe :find_column_index_by_header! do
+            it 'finds the column index' do
+              expected_headers = ['OCLC Number', 'MMSID']
+              expected_headers.each_with_index do |h, i_expected|
+                i_actual = ss.find_column_index_by_header!(h)
+                expect(i_actual).to eq(i_expected)
+              end
+            end
+
+            it 'raises ArgumentError for a nonexistent column' do
+              expect { ss.find_column_index_by_header!('not a header') }.to raise_error(ArgumentError)
             end
           end
 

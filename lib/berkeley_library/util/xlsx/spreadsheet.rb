@@ -5,6 +5,7 @@ require 'rubyXL/convenience_methods/worksheet'
 module BerkeleyLibrary
   module Util
     module XLSX
+      # Convenience wrapper RubyXL::Workbook
       class Spreadsheet
 
         # .xlsx format, a.k.a. "Office Open XML Workbook" spreadsheet
@@ -32,12 +33,12 @@ module BerkeleyLibrary
           @header_row ||= ensure_header_row!
         end
 
-        def find_header_column_index(header)
+        def find_column_index_by_header(header)
           find_column_index(header_row, header)
         end
 
-        def find_header_column_index!(header)
-          cindex = find_header_column_index(header)
+        def find_column_index_by_header!(header)
+          cindex = find_column_index_by_header(header)
           return cindex if cindex
 
           raise ArgumentError, "#{header.inspect} column not found"
@@ -64,7 +65,7 @@ module BerkeleyLibrary
         end
 
         def ensure_column!(header)
-          cindex_existing = find_header_column_index(header)
+          cindex_existing = find_column_index_by_header(header)
           return cindex_existing if cindex_existing
 
           header_row.size.tap do |cindex_next|
