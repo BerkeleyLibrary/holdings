@@ -29,7 +29,7 @@ module BerkeleyLibrary
           populate_ht_result(res)
         end
 
-        HoldingsResult.new(**params)
+        HoldingsResult.new(oclc_number, **params)
       end
 
       def wc_symbols

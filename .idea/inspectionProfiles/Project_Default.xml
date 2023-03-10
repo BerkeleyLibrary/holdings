@@ -16,7 +16,11 @@
     <inspection_tool class="RubyMismatchedArgumentType" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myCheckNilability" value="false" />
     </inspection_tool>
+    <inspection_tool class="RubyResolve" enabled="true" level="WEAK WARNING" enabled_by_default="true" editorAttributes="INFO_ATTRIBUTES">
+      <option name="warnImplicitResults" value="false" />
+    </inspection_tool>
     <inspection_tool class="RubyStringKeysInHashInspection" enabled="true" level="INFORMATION" enabled_by_default="true" />
+    <inspection_tool class="RubyTooManyInstanceVariablesInspection" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SpellCheckingInspection" enabled="false" level="TYPO" enabled_by_default="false">
       <option name="processCode" value="true" />
       <option name="processLiterals" value="true" />

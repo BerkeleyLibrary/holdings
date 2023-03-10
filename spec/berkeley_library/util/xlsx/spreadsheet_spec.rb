@@ -152,6 +152,22 @@ module BerkeleyLibrary
             end
           end
 
+          describe :rows do
+            it 'returns the rows' do
+              rows = ss.rows
+              expect(rows.size).to eq(ss.row_count)
+              rows.each_with_index do |row, ri|
+                expect(row).to be_a RubyXL::Row
+                (0...row.size).each do |ci|
+                  cell = row[ci]
+                  v_actual = cell&.value
+                  v_expected = ss.value_at(ri, ci)
+                  expect(v_actual).to eq(v_expected)
+                end
+              end
+            end
+          end
+
           describe :cell_at do
             it 'returns a cell' do
               expected_values = ['OCLC Number', *oclc_numbers_expected.map(&:to_i)]

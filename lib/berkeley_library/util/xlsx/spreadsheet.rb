@@ -39,8 +39,8 @@ module BerkeleyLibrary
         end
 
         def find_column_index_by_header!(header)
-          cindex = find_column_index_by_header(header)
-          return cindex if cindex
+          c_index = find_column_index_by_header(header)
+          return c_index if c_index
 
           raise ArgumentError, "#{header.inspect} column not found"
         end
@@ -48,7 +48,7 @@ module BerkeleyLibrary
         def find_column_index(row, *args)
           case args.size
           when 0
-            (0...row.size).find { |ci| yield row[ci] }
+            (0...row.size).find { |c_index| yield row[c_index] }
           when 1
             find_column_index(row) { |cell| cell&.value == args[0] }
           else
@@ -56,12 +56,12 @@ module BerkeleyLibrary
           end
         end
 
-        def each_value(col_index, include_header: true)
-          return to_enum(:each_value, col_index, include_header:) unless block_given?
+        def each_value(c_index, include_header: true)
+          return to_enum(:each_value, c_index, include_header:) unless block_given?
 
           start_index = include_header ? 0 : 1
           (start_index...row_count).each do |r_index|
-            yield value_at(r_index, col_index)
+            yield value_at(r_index, c_index)
           end
         end
 
@@ -85,8 +85,12 @@ module BerkeleyLibrary
           end
         end
 
+        def rows
+          sheet_data.rows
+        end
+
         def row_count
-          worksheet.sheet_data.size
+          sheet_data.size
         end
 
         def column_count(r_index = 0)
@@ -105,6 +109,10 @@ module BerkeleyLibrary
         end
 
         private
+
+        def sheet_data
+          worksheet.sheet_data
+        end
 
         def ensure_xlsx_workbook!(xlsx_path)
           # RubyXL will try to parse an Excel 95 or 97 file (which are still)
