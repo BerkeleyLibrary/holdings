@@ -3,6 +3,7 @@ require 'spec_helper'
 module BerkeleyLibrary
   module Util
     module XLSX
+
       describe Spreadsheet do
         describe :new do
           context 'success' do
@@ -153,6 +154,7 @@ module BerkeleyLibrary
           end
 
           describe :rows do
+
             it 'returns the rows' do
               rows = ss.rows
               expect(rows.size).to eq(ss.row_count)
@@ -160,7 +162,7 @@ module BerkeleyLibrary
                 expect(row).to be_a RubyXL::Row
                 (0...row.size).each do |ci|
                   cell = row[ci]
-                  v_actual = cell&.value
+                  v_actual = cell.value
                   v_expected = ss.value_at(ri, ci)
                   expect(v_actual).to eq(v_expected)
                 end
@@ -210,6 +212,39 @@ module BerkeleyLibrary
               num_cols = ss.column_count
               cell = ss.value_at(0, num_cols * 2)
               expect(cell).to be_nil
+            end
+
+            context 'with gaps' do
+              let(:new_ri_max) { ss.row_count + 3 }
+              let(:new_ci_max) { ss.column_count + 3 }
+
+              def verify_value(ri, ci)
+                row = ss.rows[ri]
+                v_actual = ss.value_at(ri, ci)
+                cell = (row[ci] if row)
+                v_expected = cell ? cell.value : nil
+                expect(v_expected).to eq(v_actual)
+              end
+
+              it 'returns nil for missing rows/columns' do
+                ss.set_value_at(new_ri_max, new_ci_max, 'test')
+
+                expected_row_count = 1 + new_ri_max
+                expected_col_count = 1 + new_ci_max
+
+                expect(ss.row_count).to eq(expected_row_count)
+                expect(ss.column_count).to eq(expected_col_count)
+
+                expect(ss.rows.size).to eq(expected_row_count)
+                (0...expected_row_count).each do |ri|
+                  row_col_count = ss.column_count(ri)
+                  expect(row_col_count).to be <= expected_col_count
+
+                  (0...expected_col_count).each do |ci|
+                    verify_value(ri, ci)
+                  end
+                end
+              end
             end
           end
 

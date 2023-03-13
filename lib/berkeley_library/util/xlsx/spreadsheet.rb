@@ -93,19 +93,21 @@ module BerkeleyLibrary
           sheet_data.size
         end
 
-        def column_count(r_index = 0)
-          return 0 unless (row = worksheet[r_index])
+        def column_count(r_index = nil)
+          if r_index
+            return (row = worksheet[r_index]) ? row.size : 0
+          end
 
-          row.size
+          rows.inject(0) do |cc_max, r|
+            r ? [r.size, cc_max].max : cc_max
+          end
         end
 
         def ensure_column!(header)
           c_index_existing = find_column_index_by_header(header)
           return c_index_existing if c_index_existing
 
-          header_row.size.tap do |c_index_next|
-            worksheet.insert_cell(0, c_index_next, header)
-          end
+          column_count.tap { |cc| worksheet.insert_cell(0, cc, header) }
         end
 
         private

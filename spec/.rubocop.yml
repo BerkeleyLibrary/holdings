@@ -65,7 +65,7 @@ RSpec/DescribeSymbol:
 
 # setup cost / time >>> failure granularity
 RSpec/ExampleLength:
-  Max: 15
+  Max: 20
   CountAsOne:
     - array
     - hash

@@ -143,7 +143,6 @@ module BerkeleyLibrary
           expect(holdings_result.ht_record_url).to eq(url_expected)
         end
 
-        # rubocop:disable RSpec/ExampleLength
         describe 'error handling' do
 
           attr_reader :logger
@@ -265,7 +264,6 @@ module BerkeleyLibrary
           end
 
         end
-        # rubocop:enable RSpec/ExampleLength
       end
     end
   end
