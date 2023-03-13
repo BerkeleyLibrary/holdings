@@ -1,9 +1,10 @@
 require 'berkeley_library/logging'
-require 'berkeley_library/holdings/spreadsheets'
+require 'berkeley_library/holdings/constants'
 
 module BerkeleyLibrary
   module Holdings
     class XLSXWriter
+      include Constants
       include BerkeleyLibrary::Logging
 
       COL_NRLF = 'NRLF'.freeze
@@ -58,7 +59,7 @@ module BerkeleyLibrary
       end
 
       def oclc_col_index
-        @oclc_col_index ||= ss.find_column_index_by_header!(Spreadsheets::OCLC_COL_HEADER)
+        @oclc_col_index ||= ss.find_column_index_by_header!(OCLC_COL_HEADER)
       end
 
       def nrlf_col_index
