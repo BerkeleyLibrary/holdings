@@ -11,6 +11,7 @@ module BerkeleyLibrary
 
         attr_reader :oclc_number
 
+        # TODO: support multiple, e.g. https://catalog.hathitrust.org/api/volumes/brief/json/oclc:1242%7Coclc:9239492%7Coclc:267274
         def initialize(oclc_number)
           @oclc_number = OCLCNumber.ensure_oclc_number!(oclc_number)
         end
