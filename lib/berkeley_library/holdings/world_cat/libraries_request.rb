@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'rest-client'
 require 'berkeley_library/util'
 require 'berkeley_library/holdings/oclc_number'
 require 'berkeley_library/holdings/world_cat/symbols'
@@ -34,8 +33,8 @@ module BerkeleyLibrary
         end
 
         def execute
-          response = RestClient.get(uri.to_s, { params: })
-          holdings_syms = holdings_from(response.body)
+          response_body = URIs.get(uri, params:, log: false)
+          holdings_syms = holdings_from(response_body)
           holdings_syms.select { |sym| symbols.include?(sym) } # just in case
         end
 

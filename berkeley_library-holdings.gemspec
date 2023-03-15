@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
 
   spec.add_dependency 'berkeley_library-logging', '~> 0.2'
-  spec.add_dependency 'berkeley_library-util', '~> 0.1'
+  spec.add_dependency 'berkeley_library-util', '~> 0.1', '>= 0.1.7'
   spec.add_dependency 'marcel', '~> 1.0.2'
   spec.add_dependency 'rest-client', '~> 2.1'
   spec.add_dependency 'rubyXL', '~> 3.4'

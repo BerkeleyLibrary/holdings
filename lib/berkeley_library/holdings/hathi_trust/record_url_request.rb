@@ -1,5 +1,5 @@
 require 'json'
-require 'rest-client'
+require 'berkeley_library/util'
 require 'berkeley_library/holdings/oclc_number'
 require 'berkeley_library/holdings/hathi_trust/config'
 
@@ -11,14 +11,13 @@ module BerkeleyLibrary
 
         attr_reader :oclc_number
 
-        # TODO: support multiple, e.g. https://catalog.hathitrust.org/api/volumes/brief/json/oclc:1242%7Coclc:9239492%7Coclc:267274
         def initialize(oclc_number)
           @oclc_number = OCLCNumber.ensure_oclc_number!(oclc_number)
         end
 
         def execute
-          response = RestClient.get(uri.to_s)
-          record_url_from(response.body, oclc_number)
+          response_body = URIs.get(uri, log: false)
+          record_url_from(response_body, oclc_number)
         end
 
         def uri
