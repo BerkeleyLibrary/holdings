@@ -10,6 +10,12 @@ module BerkeleyLibrary
 
           oclc_number
         end
+
+        def ensure_oclc_numbers!(oclc_numbers)
+          oclc_numbers.tap do |numbers|
+            numbers.each { |num| ensure_oclc_number!(num) }
+          end
+        end
       end
     end
   end

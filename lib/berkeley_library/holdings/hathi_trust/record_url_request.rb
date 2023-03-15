@@ -21,13 +21,14 @@ module BerkeleyLibrary
         end
 
         def uri
-          @uri ||= URIs.append(volumes_base_uri, "#{oclc_number}.json")
+          @uri ||= URIs.append(volumes_base_uri, 'oclc', "#{oclc_number}.json")
         end
 
         private
 
+        # TODO: share code w/RecordUrlBatchRequest
         def volumes_base_uri
-          URIs.append(Config.base_uri, 'volumes', 'brief', 'oclc')
+          URIs.append(Config.base_uri, 'volumes', 'brief')
         end
 
         def record_url_from(json_str, oclc_number)
