@@ -26,28 +26,59 @@ module BerkeleyLibrary
               expect(ws).not_to be_nil
               expect(ws[0]).to be_nil
             end
+
+            describe 'large worksheets' do
+              # NOTE: tested with up to 1 million, but it's slow (~2.5 minutes)
+              let(:num_rows) { 10_000 }
+              let(:c_indices) { Array.new(num_rows) { |r_index| r_index % 20 } }
+              let(:values) { Array.new(num_rows) { |r_index| [r_index, c_indices[r_index]].join(', ') } }
+              let(:ss_write) do
+                Spreadsheet.new.tap do |ss|
+                  c_indices.each_with_index do |c_index, r_index|
+                    ss.set_value_at(r_index, c_index, values[r_index])
+                  end
+                end
+              end
+
+              it 'handles large worksheets' do
+                Dir.mktmpdir(File.basename(__FILE__)) do |tmpdir|
+                  xlsx_path = File.join(tmpdir, "#{num_rows}.xlsx")
+                  ss_write.save_as(xlsx_path)
+
+                  ss_read = Spreadsheet.new(xlsx_path)
+                  c_indices.each_with_index do |c_index, r_index|
+                    v_expected = values[r_index]
+                    v_actual = ss_read.value_at(r_index, c_index)
+                    expect(v_actual).to eq(v_expected)
+                  end
+                end
+              end
+            end
           end
 
           context 'failure' do
             it 'rejects an Excel 95 (.xls) workbook' do
               path = 'spec/data/excel/bad/oclc-numbers-excel95.xls'
 
-              expect { Spreadsheet.new(path) }
-                .to raise_error(ArgumentError)
+              expect { Spreadsheet.new(path) }.to raise_error(ArgumentError)
             end
 
             it 'rejects an Excel 97 (.xls) workbook' do
               path = 'spec/data/excel/bad/oclc-numbers-excel97.xls'
 
-              expect { Spreadsheet.new(path) }
-                .to raise_error(ArgumentError)
+              expect { Spreadsheet.new(path) }.to raise_error(ArgumentError)
             end
 
             it 'rejects an Excel 95 workbook renamed to .xlsx' do
               path = 'spec/data/excel/bad/oclc-numbers-excel95-as-xlsx.xlsx'
 
-              expect { Spreadsheet.new(path) }
-                .to raise_error(ArgumentError)
+              expect { Spreadsheet.new(path) }.to raise_error(ArgumentError)
+            end
+
+            it 'rejects an Excel-like zipfile without worksheets' do
+              path = 'spec/data/excel/bad/zip-no-worksheets.xlsx'
+
+              expect { Spreadsheet.new(path) }.to raise_error(ArgumentError)
             end
           end
         end

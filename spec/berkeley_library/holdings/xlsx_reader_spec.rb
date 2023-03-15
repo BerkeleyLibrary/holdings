@@ -5,7 +5,6 @@ module BerkeleyLibrary
     describe XLSXReader do
       describe :new do
         context 'invalid formats' do
-
           it 'rejects an Excel 95 (.xls) workbook' do
             xls_path = 'spec/data/excel/bad/oclc-numbers-excel95.xls'
 
@@ -90,6 +89,28 @@ module BerkeleyLibrary
           reader = XLSXReader.new('spec/data/excel/oclc-numbers-extra-cols.xlsx')
           expect { |b| reader.each_oclc_number(&b) }
             .to yield_successive_args(*oclc_numbers_expected)
+        end
+
+        it 'handles large files' do
+          # NOTE: tested with up to 1 million, but it's slow (~2.5 minutes)
+          expected_count = 10_000
+          oclc_numbers = Array.new(expected_count) { |i| (expected_count + i).to_s }
+          oclc_numbers.shuffle!
+
+          Dir.mktmpdir(File.basename(__FILE__)) do |tmpdir|
+            xlsx_path = File.join(tmpdir, "#{expected_count}.xlsx")
+
+            ss = BerkeleyLibrary::Util::XLSX::Spreadsheet.new
+            c_index = ss.ensure_column!(BerkeleyLibrary::Holdings::Constants::OCLC_COL_HEADER)
+            oclc_numbers.each_with_index do |oclc_num, i|
+              r_index = 1 + i # skip header row
+              ss.set_value_at(r_index, c_index, oclc_num)
+            end
+            ss.save_as(xlsx_path)
+
+            reader = XLSXReader.new(xlsx_path)
+            expect(reader.each_oclc_number.to_a).to eq(oclc_numbers)
+          end
         end
       end
 

@@ -2,6 +2,7 @@ require 'marcel'
 require 'rubyXL'
 require 'rubyXL/convenience_methods/cell'
 require 'rubyXL/convenience_methods/worksheet'
+require 'zip'
 
 module BerkeleyLibrary
   module Util
@@ -11,6 +12,9 @@ module BerkeleyLibrary
 
         # .xlsx format, a.k.a. "Office Open XML Workbook" spreadsheet
         MIME_TYPE_OOXML_WB = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'.freeze
+
+        # path to Excel worksheet file in zipped OOXML archive
+        RE_EXCEL_WORKSHEET_ZIP_ENTRY = %r{^xl/worksheets/[^/.]+\.xml$}
 
         DEFAULT_WORKSHEET_NAME = 'Sheet1'.freeze
 
@@ -27,11 +31,11 @@ module BerkeleyLibrary
         end
 
         def worksheet
-          @worksheet ||= ensure_worksheet!
+          @worksheet ||= workbook.worksheets[0]
         end
 
         def header_row
-          @header_row ||= ensure_header_row!
+          @header_row ||= (hr = worksheet[0]) ? hr : worksheet.add_row
         end
 
         def find_column_index_by_header(header)
@@ -128,21 +132,21 @@ module BerkeleyLibrary
         def check_mime_type!(xlsx_path)
           xlsx_pathname = Pathname.new(xlsx_path)
           mime_type = Marcel::MimeType.for(xlsx_pathname)
+
           # TODO: test w/application/vnd.ms-excel.sheet.macroenabled.12
           return if Marcel::Magic.child?(mime_type, MIME_TYPE_OOXML_WB)
+
+          # Marcel fails to recognize some OOXML files, probably due to unexpected entry order
+          # and/or large entries pushing the signature it's looking for too deep into the file
+          return ensure_xlsx!(xlsx_path) if Marcel::Magic.child?(mime_type, 'application/zip')
 
           raise ArgumentError, "Expected Excel Workbook (.xlsx), got #{mime_type}: #{xlsx_path}"
         end
 
-        def ensure_worksheet!
-          workbook.worksheets[0] || workbook.add_worksheet(DEFAULT_WORKSHEET_NAME)
-        end
+        def ensure_xlsx!(zipfile_path)
+          return if Zip::File.open(zipfile_path) { |zf| zf.any? { |e| e.name =~ RE_EXCEL_WORKSHEET_ZIP_ENTRY } }
 
-        def ensure_header_row!
-          hr = worksheet[0]
-          return hr if hr
-
-          worksheet.add_row
+          raise ArgumentError, "No Excel worksheets found in ZIP archive #{zipfile_path}"
         end
       end
     end
