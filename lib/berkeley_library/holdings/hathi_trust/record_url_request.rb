@@ -1,13 +1,10 @@
-require 'json'
-require 'berkeley_library/util'
-require 'berkeley_library/holdings/oclc_number'
-require 'berkeley_library/holdings/hathi_trust/config'
+require 'berkeley_library/holdings/hathi_trust/record_url_request_base'
 
 module BerkeleyLibrary
   module Holdings
     module HathiTrust
       class RecordUrlRequest
-        include BerkeleyLibrary::Util
+        include RecordUrlRequestBase
 
         attr_reader :oclc_number
 
@@ -26,25 +23,10 @@ module BerkeleyLibrary
 
         private
 
-        # TODO: share code w/RecordUrlBatchRequest
-        def volumes_base_uri
-          URIs.append(Config.base_uri, 'volumes', 'brief')
-        end
-
         def record_url_from(json_str, oclc_number)
-          json = JSON.parse(json_str)
-          return unless (records = json['records'])
-          return unless (record = find_record(records, oclc_number))
-
-          record['recordURL']
+          json_obj = JSON.parse(json_str)
+          find_record_url(json_obj, oclc_number)
         end
-
-        def find_record(records, oclc_number)
-          records.values.find do |rec|
-            (oclc_nums = rec['oclcs']) && oclc_nums.include?(oclc_number)
-          end
-        end
-
       end
     end
   end
