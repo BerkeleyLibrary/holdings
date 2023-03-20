@@ -53,6 +53,24 @@ module BerkeleyLibrary
                   end
                 end
               end
+
+              it 'maintains data in memory when original file is deleted' do
+                ss_read = Dir.mktmpdir(File.basename(__FILE__)) do |tmpdir|
+                  xlsx_path = File.join(tmpdir, "#{num_rows}.xlsx")
+                  ss_write.save_as(xlsx_path)
+
+                  Spreadsheet.new(xlsx_path)
+                end
+
+                xlsx_path = ss_read.xlsx_path
+                expect(File.exist?(xlsx_path)).to eq(false)
+
+                c_indices.each_with_index do |c_index, r_index|
+                  v_expected = values[r_index]
+                  v_actual = ss_read.value_at(r_index, c_index)
+                  expect(v_actual).to eq(v_expected)
+                end
+              end
             end
           end
 
