@@ -20,6 +20,8 @@ module BerkeleyLibrary
 
         attr_reader :workbook, :xlsx_path
 
+        delegate :stream, to: :workbook
+
         def initialize(xlsx_path = nil)
           @workbook = xlsx_path ? ensure_xlsx_workbook!(xlsx_path) : RubyXL::Workbook.new
           @xlsx_path = xlsx_path

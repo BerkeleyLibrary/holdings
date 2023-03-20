@@ -71,6 +71,29 @@ module BerkeleyLibrary
                   expect(v_actual).to eq(v_expected)
                 end
               end
+
+              describe :stream do
+                it 'returns the spreadsheet as a readable IO' do
+                  out_stream = ss_write.stream
+                  expect(out_stream).to be_a(StringIO)
+
+                  # Bytewise comparison is unstable, probably b/c timestamps or something,
+                  # so instead we copy the stream to a new file and read that
+
+                  ss_read = Dir.mktmpdir(File.basename(__FILE__)) do |tmpdir|
+                    xlsx_path = File.join(tmpdir, "#{num_rows}.xlsx")
+                    File.binwrite(xlsx_path, out_stream.string)
+
+                    Spreadsheet.new(xlsx_path)
+                  end
+
+                  c_indices.each_with_index do |c_index, r_index|
+                    v_expected = values[r_index]
+                    v_actual = ss_read.value_at(r_index, c_index)
+                    expect(v_actual).to eq(v_expected)
+                  end
+                end
+              end
             end
           end
 
