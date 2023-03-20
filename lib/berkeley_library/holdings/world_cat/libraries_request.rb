@@ -23,6 +23,8 @@ module BerkeleyLibrary
           @uri ||= URIs.append(holdings_base_uri, oclc_number)
         end
 
+        # TODO: Check that this works w/more than 10 results
+        #       See https://developer.api.oclc.org/wcv1#/Holdings
         def params
           @params ||= {
             'oclcsymbol' => symbols.join(','),
