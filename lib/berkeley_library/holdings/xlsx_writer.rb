@@ -22,6 +22,8 @@ module BerkeleyLibrary
         @rlf = rlf
         @uc = uc
         @hathi_trust = hathi_trust
+
+        ensure_columns!
       end
 
       def <<(result)
@@ -33,6 +35,15 @@ module BerkeleyLibrary
       end
 
       private
+
+      def ensure_columns!
+        if rlf
+          nrlf_col_index
+          srlf_col_index
+        end
+        uc_col_index if uc
+        ht_col_index if hathi_trust
+      end
 
       def row_index_for(oclc_number)
         row_index = row_index_by_oclc_number[oclc_number]

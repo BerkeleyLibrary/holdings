@@ -46,6 +46,56 @@ module BerkeleyLibrary
             end
           end
 
+          it 'writes requested columns even if empty' do
+            result = HoldingsResult.new(oclc_number, ht_record_url: record_url)
+            writer = XLSXWriter.new(ss)
+            writer << result
+
+            expected = {
+              'OCLC Number' => oclc_number.to_i,
+              'NRLF' => nil,
+              'SRLF' => nil,
+              'Other UC' => nil,
+              'Hathi Trust' => record_url,
+              # check that we preserve existing values
+              'MMSID' => ss.value_at(r_index, c_index_mmsid)
+            }
+
+            expected.each do |col_header, v_expected|
+              c_index = ss.find_column_index_by_header!(col_header)
+              v_actual = ss.value_at(r_index, c_index)
+              expect(v_actual).to eq(v_expected)
+            end
+          end
+
+          it 'accepts results that only have non-requested values' do
+            result = HoldingsResult.new(
+              oclc_number,
+              wc_symbols: %w[CLU CUY ZAP ZAS]
+            )
+
+            writer = XLSXWriter.new(ss, rlf: false, uc: false)
+            writer << result
+
+            expected = {
+              'OCLC Number' => oclc_number.to_i,
+              'Hathi Trust' => nil,
+              # check that we preserve existing values
+              'MMSID' => ss.value_at(r_index, c_index_mmsid)
+            }
+
+            expected.each do |col_header, v_expected|
+              c_index = ss.find_column_index_by_header!(col_header)
+              v_actual = ss.value_at(r_index, c_index)
+              expect(v_actual).to eq(v_expected)
+            end
+
+            ['NRLF', 'SRLF', 'Other UC'].each do |header|
+              c_index = ss.find_column_index_by_header(header)
+              expect(c_index).to be_nil
+            end
+          end
+
           it 'can write a result without a HathiTrust record URL' do
             writer = XLSXWriter.new(ss)
             writer << result
