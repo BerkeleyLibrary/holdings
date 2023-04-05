@@ -46,6 +46,66 @@ module BerkeleyLibrary
             end
           end
 
+          it 'writes a result with WorldCat errors' do
+            err_msg = '500 Internal Server Error'
+
+            result = HoldingsResult.new(
+              oclc_number,
+              wc_error: err_msg,
+              ht_record_url: record_url
+            )
+
+            expected = {
+              'OCLC Number' => oclc_number.to_i,
+              'NRLF' => nil,
+              'SRLF' => nil,
+              'Other UC' => nil,
+              'Hathi Trust' => record_url,
+              'WorldCat Error' => err_msg,
+              # check that we preserve existing values
+              'MMSID' => ss.value_at(r_index, c_index_mmsid)
+            }
+
+            writer = XLSXWriter.new(ss)
+            writer << result
+
+            expected.each do |col_header, v_expected|
+              c_index = ss.find_column_index_by_header!(col_header)
+              v_actual = ss.value_at(r_index, c_index)
+              expect(v_actual).to eq(v_expected)
+            end
+          end
+
+          it 'writes a result with HathiTrust errors' do
+            err_msg = '500 Internal Server Error'
+
+            result = HoldingsResult.new(
+              oclc_number,
+              wc_symbols: %w[CLU CUY ZAP ZAS],
+              ht_error: err_msg
+            )
+
+            expected = {
+              'OCLC Number' => oclc_number.to_i,
+              'NRLF' => 'nrlf',
+              'SRLF' => 'srlf',
+              'Other UC' => 'CLU,CUY',
+              'Hathi Trust' => nil,
+              'Hathi Trust Error' => err_msg,
+              # check that we preserve existing values
+              'MMSID' => ss.value_at(r_index, c_index_mmsid)
+            }
+
+            writer = XLSXWriter.new(ss)
+            writer << result
+
+            expected.each do |col_header, v_expected|
+              c_index = ss.find_column_index_by_header!(col_header)
+              v_actual = ss.value_at(r_index, c_index)
+              expect(v_actual).to eq(v_expected)
+            end
+          end
+
           it 'writes requested columns even if empty' do
             result = HoldingsResult.new(oclc_number, ht_record_url: record_url)
             writer = XLSXWriter.new(ss)

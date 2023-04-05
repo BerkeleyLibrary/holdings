@@ -10,7 +10,10 @@ module BerkeleyLibrary
       COL_NRLF = 'NRLF'.freeze
       COL_SRLF = 'SRLF'.freeze
       COL_OTHER_UC = 'Other UC'.freeze
+      COL_WC_ERROR = 'WorldCat Error'.freeze
+
       COL_HATHI_TRUST = 'Hathi Trust'.freeze
+      COL_HATHI_TRUST_ERROR = "#{COL_HATHI_TRUST} Error".freeze
 
       V_NRLF = 'nrlf'.freeze
       V_SRLF = 'srlf'.freeze
@@ -28,13 +31,22 @@ module BerkeleyLibrary
 
       def <<(result)
         r_index = row_index_for(result.oclc_number)
-        write_rlf(r_index, result) if rlf
-        write_uc(r_index, result) if uc
-        write_hathi(r_index, result) if hathi_trust
-        # TODO: should we do anything with wc_error and ht_error?
+        write_wc_cols(r_index, result) if rlf || uc
+        write_ht_cols(r_index, result) if hathi_trust
       end
 
       private
+
+      def write_wc_cols(r_index, result)
+        write_wc_error(r_index, result)
+        write_rlf(r_index, result) if rlf
+        write_uc(r_index, result) if uc
+      end
+
+      def write_ht_cols(r_index, result)
+        write_ht_error(r_index, result)
+        write_hathi(r_index, result)
+      end
 
       def ensure_columns!
         if rlf
@@ -69,6 +81,18 @@ module BerkeleyLibrary
         ss.set_value_at(r_index, ht_col_index, ht_record_url)
       end
 
+      def write_wc_error(r_index, result)
+        return unless (wc_error = result.wc_error)
+
+        ss.set_value_at(r_index, wc_err_col_index, wc_error)
+      end
+
+      def write_ht_error(r_index, result)
+        return unless (ht_error = result.ht_error)
+
+        ss.set_value_at(r_index, ht_err_col_index, ht_error)
+      end
+
       def oclc_col_index
         @oclc_col_index ||= ss.find_column_index_by_header!(OCLC_COL_HEADER)
       end
@@ -85,8 +109,16 @@ module BerkeleyLibrary
         @uc_col_index ||= ss.ensure_column!(COL_OTHER_UC)
       end
 
+      def wc_err_col_index
+        @wc_err_col_index ||= ss.ensure_column!(COL_WC_ERROR)
+      end
+
       def ht_col_index
         @ht_col_index ||= ss.ensure_column!(COL_HATHI_TRUST)
+      end
+
+      def ht_err_col_index
+        @ht_err_col_index ||= ss.ensure_column!(COL_HATHI_TRUST_ERROR)
       end
 
       def row_index_by_oclc_number
