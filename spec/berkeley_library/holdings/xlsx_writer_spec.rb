@@ -407,6 +407,66 @@ module BerkeleyLibrary
               expect(v_actual).to eq(v_expected)
             end
           end
+
+          context 'blank columns' do
+            let(:cc_inserted) { 2 }
+
+            attr_reader :cc_original, :c_indices_expected
+
+            before do
+              @cc_original = ss.column_count
+              cc_inserted.times { ss.worksheet.insert_column(cc_original - 1) }
+
+              added_columns = ['NRLF', 'SRLF', 'Other UC', 'Hathi Trust']
+              @c_indices_expected = added_columns.map.with_index do |h, i|
+                cindex_expected = cc_original + cc_inserted + i
+                [h, cindex_expected]
+              end.to_h
+            end
+
+            def assert_expected_column_indices!
+              c_indices_expected.each do |h, c_index_expected|
+                c_index_actual = ss.find_column_index_by_header(h)
+                expect(c_index_actual).to eq(c_index_expected)
+              end
+            end
+
+            it 'skips medial blank columns' do
+              writer = XLSXWriter.new(ss)
+              writer << result
+
+              assert_expected_column_indices!
+            end
+
+            # TODO: make this work
+            xit 'overwrites final blank columns' do
+              3.times { ss.worksheet.insert_column(cc_original) }
+
+              writer = XLSXWriter.new(ss)
+              writer << result
+
+              assert_expected_column_indices!
+            end
+
+            # TODO: make this work
+            xit 'overwrites final columns with blank cells' do
+
+              3.times do
+                ss.worksheet.insert_column(cc_original)
+              end
+              (0...ss.row_count).step(3).each do |r_index|
+                ss.set_value_at(r_index, cc_original, ' ')
+              end
+              (0...ss.row_count).step(7).each do |r_index|
+                ss.set_value_at(r_index, cc_original, "\t")
+              end
+
+              writer = XLSXWriter.new(ss)
+              writer << result
+
+              assert_expected_column_indices!
+            end
+          end
         end
 
         context 'failure' do
