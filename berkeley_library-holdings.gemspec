@@ -21,11 +21,10 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = "#{spec.homepage}/CHANGELOG.md"
   spec.metadata['rubygems_mfa_required'] = 'true'
 
-  spec.files = Dir.chdir(__dir__) do
-    `git ls-files -z`.split("\x0").reject do |f|
-      (f == __FILE__) || %r{^(?:spec/|\.git)}
-    end
-  end
+  spec.files = Dir[
+    'lib/**/*',
+    '*.md'
+  ]
   spec.require_paths = ['lib']
 
   spec.add_dependency 'berkeley_library-logging', '~> 0.2'
