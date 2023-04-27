@@ -25,3 +25,4 @@ end
 # Code under test
 
 require 'berkeley_library/holdings'
+require 'berkeley_library/util/xlsx'

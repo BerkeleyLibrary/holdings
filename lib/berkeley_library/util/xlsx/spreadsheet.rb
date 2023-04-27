@@ -113,7 +113,8 @@ module BerkeleyLibrary
           c_index_existing = find_column_index_by_header(header)
           return c_index_existing if c_index_existing
 
-          column_count.tap { |cc| worksheet.insert_cell(0, cc, header) }
+          c_index_next = worksheet.first_blank_column_index
+          c_index_next.tap { |cc| worksheet.add_cell(0, cc, header) }
         end
 
         private
