@@ -3,6 +3,7 @@ require 'rubyXL'
 require 'rubyXL/convenience_methods/cell'
 require 'rubyXL/convenience_methods/worksheet'
 require 'zip'
+require 'berkeley_library/util/xlsx'
 
 module BerkeleyLibrary
   module Util
