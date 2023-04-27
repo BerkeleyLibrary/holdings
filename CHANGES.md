@@ -1,3 +1,7 @@
+# 1.0.3 (2023-04-27)
+
+- Fix issue requiring RubyXL extensions to be explicitly required 
+
 # 1.0.2 (2023-04-27)
 
 - Overwrite existing blank columns when writing results to spreadsheet
