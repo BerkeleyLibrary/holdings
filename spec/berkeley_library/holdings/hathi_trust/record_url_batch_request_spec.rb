@@ -95,6 +95,28 @@ module BerkeleyLibrary
               expect(searches).to include("oclc:#{expected_num}")
             end
           end
+
+          it 'handles bad OCLC numbers' do
+            oclc_number = 'I am not an OCLC number'
+            batch = [oclc_number]
+            uri_actual = RecordUrlBatchRequest.new(batch).uri
+
+            base_uri = Config.base_uri
+            expect(uri_actual.scheme).to eq(base_uri.scheme)
+            expect(uri_actual.host).to eq(base_uri.host)
+
+            path_actual = uri_actual.path
+            expect(path_actual).to start_with('/api/volumes/brief/')
+
+            oclc_number_escaped = BerkeleyLibrary::Util::URIs.path_escape(oclc_number)
+            expected_search = "oclc:#{oclc_number_escaped}"
+
+            last_path_component = path_actual.split('/').last
+            search_separator = Util::URIs.path_escape('|')
+            searches = last_path_component.split(search_separator)
+            expect(searches).to include(expected_search)
+          end
+
         end
 
         describe :execute do

@@ -20,7 +20,7 @@ module BerkeleyLibrary
         end
 
         def uri
-          @uri ||= URIs.append(holdings_base_uri, oclc_number)
+          @uri ||= URIs.append(holdings_base_uri, URIs.path_escape(oclc_number))
         end
 
         # TODO: Check that this works w/more than 10 results

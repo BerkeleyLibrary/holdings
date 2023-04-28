@@ -74,6 +74,14 @@ module BerkeleyLibrary
             uri_actual = LibrariesRequest.new(oclc_number).uri
             expect(uri_actual).to eq(uri_expected)
           end
+
+          it 'handles bad OCLC numbers' do
+            oclc_number = 'I am not an OCLC number'
+            oclc_number_escaped = BerkeleyLibrary::Util::URIs.path_escape(oclc_number)
+            uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number_escaped}")
+            uri_actual = LibrariesRequest.new(oclc_number).uri
+            expect(uri_actual).to eq(uri_expected)
+          end
         end
 
         describe :execute do

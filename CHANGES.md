@@ -1,3 +1,8 @@
+# 1.0.4 (next)
+
+- Escape OCLC numbers before constructing query URIs
+  (not an issue for correct OCLC numbers, but can be an issue in the event of bad data)
+
 # 1.0.3 (2023-04-27)
 
 - Fix issue requiring RubyXL extensions to be explicitly required 

@@ -21,6 +21,14 @@ module BerkeleyLibrary
             uri_actual = RecordUrlRequest.new(oclc_number).uri
             expect(uri_actual).to eq(uri_expected)
           end
+
+          it 'handles bad OCLC numbers' do
+            oclc_number = 'I am not an OCLC number'
+            oclc_number_escaped = BerkeleyLibrary::Util::URIs.path_escape(oclc_number)
+            uri_expected = URI.parse("#{ht_base_url}volumes/brief/oclc/#{oclc_number_escaped}.json")
+            uri_actual = RecordUrlRequest.new(oclc_number).uri
+            expect(uri_actual).to eq(uri_expected)
+          end
         end
 
         describe :execute do

@@ -18,7 +18,7 @@ module BerkeleyLibrary
         end
 
         def uri
-          @uri ||= URIs.append(volumes_base_uri, 'oclc', "#{oclc_number}.json")
+          @uri ||= URIs.append(volumes_base_uri, 'oclc', URIs.path_escape("#{oclc_number}.json"))
         end
 
         private
