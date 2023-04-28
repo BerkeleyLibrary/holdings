@@ -1,4 +1,4 @@
-# 1.0.4 (next)
+# 1.0.4 (2023-04-28)
 
 - Escape OCLC numbers before constructing query URIs
   (not an issue for correct OCLC numbers, but can be an issue in the event of bad data)

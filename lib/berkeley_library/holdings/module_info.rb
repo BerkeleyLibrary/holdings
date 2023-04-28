@@ -7,7 +7,7 @@ module BerkeleyLibrary
       SUMMARY = 'Holdings-related utilities for the UC Berkeley Library'.freeze
       DESCRIPTION = 'A collection of holdings-related utilities for the UC Berkeley Library'.freeze
       LICENSE = 'MIT'.freeze
-      VERSION = '1.0.3'.freeze
+      VERSION = '1.0.4'.freeze
       HOMEPAGE = 'https://github.com/BerkeleyLibrary/holdings'.freeze
     end
   end
