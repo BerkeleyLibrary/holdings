@@ -1,3 +1,8 @@
+# 1.0.5 (2023-06-01)
+
+- Update to `berkeley_library-util` 0.1.9 to handle non-ASCII OCLC numbers
+- Fix issue where locating blank columns could fail on spreadsheets with nil rows
+
 # 1.0.4 (2023-04-28)
 
 - Escape OCLC numbers before constructing query URIs
