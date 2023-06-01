@@ -112,6 +112,26 @@ module BerkeleyLibrary
             expect(reader.each_oclc_number.to_a).to eq(oclc_numbers)
           end
         end
+
+        it 'handles files with missing rows' do
+          xlsx_path = 'spec/data/excel/nil-rows.xlsx'
+          oclc_numbers = %w[
+            482132
+            1565651
+            1375549
+            5070824
+            4979728
+            10727310
+            1777934
+            1568580
+            17802293
+            1777832
+            9863947
+            42343741
+          ]
+          reader = XLSXReader.new(xlsx_path)
+          expect(reader.each_oclc_number.to_a).to eq(oclc_numbers)
+        end
       end
 
     end

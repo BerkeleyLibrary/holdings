@@ -20,6 +20,9 @@ Gemfile.lock
 ~*.xls
 ~*.xlsx
 
+# Local test configuration
+.env
+
 ############################################################
 # Generated ignores
 

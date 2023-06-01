@@ -82,6 +82,13 @@ module BerkeleyLibrary
             uri_actual = LibrariesRequest.new(oclc_number).uri
             expect(uri_actual).to eq(uri_expected)
           end
+
+          it 'handles ASCII-encoded OCLC numbers' do
+            oclc_number_ascii = oclc_number.encode('US-ASCII')
+            uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number}")
+            uri_actual = LibrariesRequest.new(oclc_number_ascii).uri
+            expect(uri_actual).to eq(uri_expected)
+          end
         end
 
         describe :execute do

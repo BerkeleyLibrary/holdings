@@ -78,6 +78,16 @@ module BerkeleyLibrary
             expect(c_index_actual).to eq(c_index_expected)
           end
         end
+
+        it 'handles nil rows' do
+          xlsx_path = 'spec/data/excel/nil-rows.xlsx'
+          workbook = RubyXL::Parser.parse(xlsx_path)
+          worksheet = workbook.worksheets[0]
+
+          c_index_expected = 4
+          c_index_actual = worksheet.first_blank_column_index
+          expect(c_index_actual).to eq(c_index_expected)
+        end
       end
     end
   end

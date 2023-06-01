@@ -395,6 +395,28 @@ module BerkeleyLibrary
             end
           end
         end
+
+        context 'with nil rows' do
+          let(:ss) { Spreadsheet.new('spec/data/excel/nil-rows.xlsx') }
+
+          describe(:row_count) do
+            it 'returns the Excel logical row count' do
+              expect(ss.row_count).to eq(1000)
+            end
+          end
+
+          describe(:column_count) do
+            it 'returns the column count' do
+              expect(ss.column_count).to eq(5)
+            end
+          end
+
+          describe(:header_row) do
+            it 'returns th eheader row' do
+              expect(ss.header_row).not_to be_nil
+            end
+          end
+        end
       end
     end
   end
