@@ -1,7 +1,7 @@
 require 'rubygems/gem_runner'
-require 'berkeley_library/holdings/module_info'
+require 'berkeley_library/location/module_info'
 
-gem_root_module = BerkeleyLibrary::Holdings
+gem_root_module = BerkeleyLibrary::Location
 
 class << gem_root_module
   def project_root

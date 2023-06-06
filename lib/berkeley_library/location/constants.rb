@@ -1,5 +1,5 @@
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module Constants
       OCLC_COL_HEADER = 'OCLC Number'.freeze
 

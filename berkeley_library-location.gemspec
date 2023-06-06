@@ -2,17 +2,17 @@ File.expand_path('lib', __dir__).tap do |lib|
   $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 end
 
-require 'berkeley_library/holdings/module_info'
+require 'berkeley_library/location/module_info'
 
 Gem::Specification.new do |spec|
-  spec.name = BerkeleyLibrary::Holdings::ModuleInfo::NAME
-  spec.author = BerkeleyLibrary::Holdings::ModuleInfo::AUTHOR
-  spec.email = BerkeleyLibrary::Holdings::ModuleInfo::AUTHOR_EMAIL
-  spec.summary = BerkeleyLibrary::Holdings::ModuleInfo::SUMMARY
-  spec.description = BerkeleyLibrary::Holdings::ModuleInfo::DESCRIPTION
-  spec.license = BerkeleyLibrary::Holdings::ModuleInfo::LICENSE
-  spec.version = BerkeleyLibrary::Holdings::ModuleInfo::VERSION
-  spec.homepage = BerkeleyLibrary::Holdings::ModuleInfo::HOMEPAGE
+  spec.name = BerkeleyLibrary::Location::ModuleInfo::NAME
+  spec.author = BerkeleyLibrary::Location::ModuleInfo::AUTHOR
+  spec.email = BerkeleyLibrary::Location::ModuleInfo::AUTHOR_EMAIL
+  spec.summary = BerkeleyLibrary::Location::ModuleInfo::SUMMARY
+  spec.description = BerkeleyLibrary::Location::ModuleInfo::DESCRIPTION
+  spec.license = BerkeleyLibrary::Location::ModuleInfo::LICENSE
+  spec.version = BerkeleyLibrary::Location::ModuleInfo::VERSION
+  spec.homepage = BerkeleyLibrary::Location::ModuleInfo::HOMEPAGE
 
   spec.required_ruby_version = '>= 3.1.0'
 

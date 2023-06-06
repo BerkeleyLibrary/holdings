@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module HathiTrust
       describe RecordUrlRequest do
         let(:ht_base_url) { 'https://catalog.example.test/api/' }

@@ -89,7 +89,7 @@
     <orderEntry type="library" scope="PROVIDED" name="unf_ext (v0.0.8.2, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="unicode-display_width (v2.4.2, RVM: ruby-3.1.2) [gem]" level="application" />
     <orderEntry type="library" scope="PROVIDED" name="webmock (v3.18.1, RVM: ruby-3.1.2) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.7, RVM: ruby-3.1.2) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="zeitwerk (v2.6.8, RVM: ruby-3.1.2) [gem]" level="application" />
   </component>
   <component name="RModuleSettingsStorage">
     <LOAD_PATH number="2" string0="$MODULE_DIR$/lib" string1="$MODULE_DIR$/spec" />
@@ -106,7 +106,7 @@
           </RakeTaskImpl>
           <RakeTaskImpl description="Run all specs in spec directory, with coverage" fullCommand="coverage" id="coverage" />
           <RakeTaskImpl description="Run tests, check test coverage, check code style, check for vulnerabilities, build gem" fullCommand="default" id="default" />
-          <RakeTaskImpl description="Build berkeley_library-holdings.gemspec as berkeley_library-holdings-1.0.4.gem" fullCommand="gem" id="gem" />
+          <RakeTaskImpl description="Build berkeley_library-location.gemspec as berkeley_library-location-1.0.5.gem" fullCommand="gem" id="gem" />
           <RakeTaskImpl description="Run RuboCop with auto-correct, and output results to console" fullCommand="ra" id="ra" />
           <RakeTaskImpl description="Run rubocop with HTML output" fullCommand="rubocop" id="rubocop" />
           <RakeTaskImpl id="rubocop">

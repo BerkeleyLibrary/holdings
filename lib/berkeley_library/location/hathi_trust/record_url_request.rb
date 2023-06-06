@@ -1,7 +1,7 @@
-require 'berkeley_library/holdings/hathi_trust/record_url_request_base'
+require 'berkeley_library/location/hathi_trust/record_url_request_base'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module HathiTrust
       class RecordUrlRequest
         include RecordUrlRequestBase

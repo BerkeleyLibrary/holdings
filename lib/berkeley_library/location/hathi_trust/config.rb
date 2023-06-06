@@ -1,7 +1,7 @@
 require 'berkeley_library/util'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module HathiTrust
       module Config
         include BerkeleyLibrary::Util::URIs

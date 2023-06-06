@@ -1,7 +1,7 @@
 require 'berkeley_library/util/uris'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module WorldCat
       module Config
         include BerkeleyLibrary::Util::URIs

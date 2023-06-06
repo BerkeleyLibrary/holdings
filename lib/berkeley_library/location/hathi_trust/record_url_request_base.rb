@@ -1,10 +1,10 @@
 require 'json'
 require 'berkeley_library/util'
-require 'berkeley_library/holdings/oclc_number'
-require 'berkeley_library/holdings/hathi_trust/config'
+require 'berkeley_library/location/oclc_number'
+require 'berkeley_library/location/hathi_trust/config'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module HathiTrust
       module RecordUrlRequestBase
         include BerkeleyLibrary::Util

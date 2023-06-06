@@ -1,5 +1,5 @@
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module WorldCat
       describe LibrariesRequest do
         let(:oclc_number) { '85833285' }

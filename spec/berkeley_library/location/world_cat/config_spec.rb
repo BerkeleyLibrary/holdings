@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module WorldCat
       describe Config do
         after do

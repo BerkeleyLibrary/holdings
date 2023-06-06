@@ -1,8 +1,8 @@
 require 'berkeley_library/logging'
-require 'berkeley_library/holdings/constants'
+require 'berkeley_library/location/constants'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     class XLSXWriter
       include Constants
       include BerkeleyLibrary::Logging

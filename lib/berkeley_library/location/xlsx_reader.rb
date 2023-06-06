@@ -1,10 +1,10 @@
 require 'marcel'
 require 'rubyXL'
-require 'berkeley_library/holdings/constants'
+require 'berkeley_library/location/constants'
 require 'berkeley_library/util/xlsx/spreadsheet'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     class XLSXReader
       include Constants
 

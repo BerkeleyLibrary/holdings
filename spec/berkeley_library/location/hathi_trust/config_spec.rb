@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module HathiTrust
       describe Config do
         after do

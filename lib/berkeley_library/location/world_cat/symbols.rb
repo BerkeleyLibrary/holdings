@@ -1,5 +1,5 @@
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module WorldCat
       module Symbols
         NRLF = %w[ZAP ZAPSP].freeze

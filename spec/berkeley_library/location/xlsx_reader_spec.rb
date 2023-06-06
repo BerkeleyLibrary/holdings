@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     describe XLSXReader do
       describe :new do
         context 'invalid formats' do
@@ -101,7 +101,7 @@ module BerkeleyLibrary
             xlsx_path = File.join(tmpdir, "#{expected_count}.xlsx")
 
             ss = BerkeleyLibrary::Util::XLSX::Spreadsheet.new
-            c_index = ss.ensure_column!(BerkeleyLibrary::Holdings::Constants::OCLC_COL_HEADER)
+            c_index = ss.ensure_column!(BerkeleyLibrary::Location::Constants::OCLC_COL_HEADER)
             oclc_numbers.each_with_index do |oclc_num, i|
               r_index = 1 + i # skip header row
               ss.set_value_at(r_index, c_index, oclc_num)

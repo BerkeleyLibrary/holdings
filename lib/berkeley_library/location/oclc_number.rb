@@ -1,5 +1,5 @@
 module BerkeleyLibrary
-  module Holdings
+  module Location
     module OCLCNumber
       class << self
         def ensure_oclc_number!(oclc_number)

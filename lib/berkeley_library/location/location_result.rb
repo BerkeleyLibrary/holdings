@@ -1,8 +1,8 @@
-require 'berkeley_library/holdings/world_cat/symbols'
+require 'berkeley_library/location/world_cat/symbols'
 
 module BerkeleyLibrary
-  module Holdings
-    class HoldingsResult
+  module Location
+    class LocationResult
       attr_reader :oclc_number, :wc_symbols, :ht_record_url, :wc_error, :ht_error
 
       def initialize(oclc_number, wc_symbols: [], wc_error: nil, ht_record_url: nil, ht_error: nil)

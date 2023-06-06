@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module BerkeleyLibrary
-  module Holdings
+  module Location
     describe XLSXWriter do
       describe :<< do
         let(:ss) { Util::XLSX::Spreadsheet.new('spec/data/excel/oclc-numbers.xlsx') }
@@ -16,7 +16,7 @@ module BerkeleyLibrary
         let(:record_url) { 'https://catalog.hathitrust.org/Record/102321413' }
 
         let(:result) do
-          HoldingsResult.new(
+          LocationResult.new(
             oclc_number,
             wc_symbols: %w[CLU CUY ZAP ZAS],
             ht_record_url: record_url
@@ -49,7 +49,7 @@ module BerkeleyLibrary
           it 'writes a result with WorldCat errors' do
             err_msg = '500 Internal Server Error'
 
-            result = HoldingsResult.new(
+            result = LocationResult.new(
               oclc_number,
               wc_error: err_msg,
               ht_record_url: record_url
@@ -79,7 +79,7 @@ module BerkeleyLibrary
           it 'writes a result with HathiTrust errors' do
             err_msg = '500 Internal Server Error'
 
-            result = HoldingsResult.new(
+            result = LocationResult.new(
               oclc_number,
               wc_symbols: %w[CLU CUY ZAP ZAS],
               ht_error: err_msg
@@ -107,7 +107,7 @@ module BerkeleyLibrary
           end
 
           it 'writes requested columns even if empty' do
-            result = HoldingsResult.new(oclc_number, ht_record_url: record_url)
+            result = LocationResult.new(oclc_number, ht_record_url: record_url)
             writer = XLSXWriter.new(ss)
             writer << result
 
@@ -129,7 +129,7 @@ module BerkeleyLibrary
           end
 
           it 'accepts results that only have non-requested values' do
-            result = HoldingsResult.new(
+            result = LocationResult.new(
               oclc_number,
               wc_symbols: %w[CLU CUY ZAP ZAS]
             )
@@ -164,7 +164,7 @@ module BerkeleyLibrary
             r_index_next = 1 + oclc_index_next
             oclc_number_next = oclc_numbers_expected[oclc_index_next]
 
-            result_next = HoldingsResult.new(
+            result_next = LocationResult.new(
               oclc_number_next,
               wc_symbols: %w[CLU CUY ZAP ZAS]
             )
@@ -195,7 +195,7 @@ module BerkeleyLibrary
             r_index_next = 1 + oclc_index_next
             oclc_number_next = oclc_numbers_expected[oclc_index_next]
 
-            result_next = HoldingsResult.new(
+            result_next = LocationResult.new(
               oclc_number_next,
               wc_symbols: %w[CLU CUY ZAS]
             )
@@ -226,7 +226,7 @@ module BerkeleyLibrary
             r_index_next = 1 + oclc_index_next
             oclc_number_next = oclc_numbers_expected[oclc_index_next]
 
-            result_next = HoldingsResult.new(
+            result_next = LocationResult.new(
               oclc_number_next,
               wc_symbols: %w[ZAP ZAS]
             )
@@ -257,7 +257,7 @@ module BerkeleyLibrary
             r_index_next = 1 + oclc_index_next
             oclc_number_next = oclc_numbers_expected[oclc_index_next]
 
-            result_next = HoldingsResult.new(
+            result_next = LocationResult.new(
               oclc_number_next,
               wc_symbols: %w[CLU CUY ZAP]
             )
@@ -412,7 +412,7 @@ module BerkeleyLibrary
             ss = Util::XLSX::Spreadsheet.new('spec/data/excel/sparse-table.xlsx')
 
             oclc_number = '63125872'
-            result = HoldingsResult.new(
+            result = LocationResult.new(
               oclc_number,
               wc_symbols: %w[CUI CUT CUV ZAS],
               ht_error: '403 Forbidden'
@@ -448,7 +448,7 @@ module BerkeleyLibrary
 
           it 'fails on nonexistent OCLC numbers' do
             bad_oclc_number = (oclc_numbers_expected.map(&:to_i).max * 2).to_s
-            bad_result = HoldingsResult.new(
+            bad_result = LocationResult.new(
               bad_oclc_number,
               wc_symbols: %w[CLU CUY ZAP ZAS],
               ht_record_url: record_url
