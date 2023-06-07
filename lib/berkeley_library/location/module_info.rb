@@ -7,7 +7,7 @@ module BerkeleyLibrary
       SUMMARY = 'Locaton-related utilities for the UC Berkeley Library'.freeze
       DESCRIPTION = 'A collection of location-related utilities for the UC Berkeley Library'.freeze
       LICENSE = 'MIT'.freeze
-      VERSION = '1.0.5'.freeze
+      VERSION = '2.0.0'.freeze
       HOMEPAGE = 'https://github.com/BerkeleyLibrary/location'.freeze
     end
   end

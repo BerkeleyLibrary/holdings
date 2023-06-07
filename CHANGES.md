@@ -1,3 +1,7 @@
+# 2.0.0 (2023-06-06)
+
+- Rename from "holdings" to "location"
+
 # 1.0.5 (2023-06-01)
 
 - Update to `berkeley_library-util` 0.1.9 to handle non-ASCII OCLC numbers
