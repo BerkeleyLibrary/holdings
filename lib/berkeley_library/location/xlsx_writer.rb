@@ -30,9 +30,11 @@ module BerkeleyLibrary
       end
 
       def <<(result)
-        r_index = row_index_for(result.oclc_number)
-        write_wc_cols(r_index, result) if rlf || uc
-        write_ht_cols(r_index, result) if hathi_trust
+        r_indices = row_indices_for(result.oclc_number)
+        r_indices.each do |idx|
+          write_wc_cols(idx, result) if rlf || uc
+          write_ht_cols(idx, result) if hathi_trust
+        end
       end
 
       private
@@ -57,8 +59,8 @@ module BerkeleyLibrary
         ht_col_index if hathi_trust
       end
 
-      def row_index_for(oclc_number)
-        row_index = row_index_by_oclc_number[oclc_number]
+      def row_indices_for(oclc_number)
+        row_index = row_indices_by_oclc_number[oclc_number]
         return row_index if row_index
 
         raise ArgumentError, "Unknown OCLC number: #{oclc_number}"
@@ -121,18 +123,15 @@ module BerkeleyLibrary
         @ht_err_col_index ||= ss.ensure_column!(COL_HATHI_TRUST_ERROR)
       end
 
-      def row_index_by_oclc_number
+      def row_indices_by_oclc_number
         # Start at 1 to skip header row
-        @row_index_by_oclc_number ||= (1...ss.row_count).each_with_object({}) do |r_index, r_indices|
+        @row_indices_by_oclc_number ||= (1...ss.row_count).each_with_object({}) do |r_index, r_indices|
           oclc_number_raw = ss.value_at(r_index, oclc_col_index)
           next unless oclc_number_raw
 
           oclc_number = oclc_number_raw.to_s
-          if r_indices.key?(oclc_number)
-            logger.warn("Skipping duplicate OCLC number #{oclc_number} in row #{r_index}")
-          else
-            r_indices[oclc_number] = r_index
-          end
+          r_indices[oclc_number] ||= []
+          r_indices[oclc_number] << r_index
         end
       end
     end

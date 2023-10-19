@@ -1,3 +1,11 @@
+# 3.0.0 (2023-10-10)
+
+- Support duplicate OCLC numbers
+
+# 2.0.0 (2023-06-06)
+
+- Rename from "holdings" to "location"
+
 # 2.0.0 (2023-06-06)
 
 - Rename from "holdings" to "location"
