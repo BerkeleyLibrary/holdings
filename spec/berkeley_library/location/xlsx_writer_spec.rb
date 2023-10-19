@@ -350,7 +350,7 @@ module BerkeleyLibrary
             expect(c_index).to be_nil
           end
 
-          it 'ignores rows with duplicate OCLC numbers' do
+          it 'does not ignore rows with duplicate OCLC numbers' do
             expected = {
               'OCLC Number' => oclc_number.to_i,
               'NRLF' => 'nrlf',
@@ -364,9 +364,6 @@ module BerkeleyLibrary
             r_index_dup = 1 + oclc_numbers_expected.size
             ss.set_value_at(r_index_dup, c_index_oclc, oclc_number)
 
-            logger = BerkeleyLibrary::Logging.logger
-            expect(logger).to receive(:warn).with(/#{oclc_number}.*#{r_index_dup}/)
-
             writer = XLSXWriter.new(ss)
             writer << result
 
@@ -379,7 +376,7 @@ module BerkeleyLibrary
             ['NRLF', 'SRLF', 'Other UC', 'Hathi Trust'].each do |col_header|
               c_index = ss.find_column_index_by_header!(col_header)
               v_actual = ss.value_at(r_index_dup, c_index)
-              expect(v_actual).to be_nil
+              expect(v_actual).to eq(expected[col_header])
             end
           end
 
