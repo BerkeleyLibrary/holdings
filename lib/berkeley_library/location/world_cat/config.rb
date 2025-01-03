@@ -110,6 +110,13 @@ module BerkeleyLibrary
           rails_config.worldcat_api_key
         end
 
+        def rails_worldcat_api_secret
+          return unless (rails_config = self.rails_config)
+          return unless rails_config.respond_to?(:worldcat_api_secret)
+
+          rails_config.worldcat_api_secret
+        end
+
         def rails_config
           return unless defined?(Rails)
           return unless (app = Rails.application)

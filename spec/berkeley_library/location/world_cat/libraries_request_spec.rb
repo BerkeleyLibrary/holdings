@@ -3,13 +3,16 @@ module BerkeleyLibrary
     module WorldCat
       describe LibrariesRequest do
         let(:oclc_number) { '85833285' }
-        let(:wc_base_url) { 'https://www.example.test/webservices/' }
+        # let(:wc_base_url) { 'https://www.example.test/webservices/' }
+        let(:wc_base_url) { 'https://americas.discovery.api.oclc.org/worldcat/search/v2/' }
         let(:wc_api_key) { '2lo55pdh7moyfodeo4gwgms0on65x31ghv0g6yg87ffwaljsdw' }
+        let(:wc_api_secret) { 'totallyfakesecret' }
 
-        before do
-          Config.base_uri = wc_base_url
-          Config.api_key = wc_api_key
-        end
+        # before do
+        #   # Config.base_uri = wc_base_url
+        #   # Config.api_key = wc_api_key
+        #   # Config.api_secret = wc_api_secret
+        # end
 
         after do
           Config.send(:reset!)
@@ -68,25 +71,12 @@ module BerkeleyLibrary
           end
         end
 
+        # How to handle these tests... now the oclc number is passed as a parameter
+        # and NOT in the URI...so these are kind of moot.
         describe :uri do
           it 'returns the URI for the specified OCLC number' do
-            uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number}")
+            uri_expected = URI.parse("#{wc_base_url}bibs-holdings")
             uri_actual = LibrariesRequest.new(oclc_number).uri
-            expect(uri_actual).to eq(uri_expected)
-          end
-
-          it 'handles bad OCLC numbers' do
-            oclc_number = 'I am not an OCLC number'
-            oclc_number_escaped = BerkeleyLibrary::Util::URIs.path_escape(oclc_number)
-            uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number_escaped}")
-            uri_actual = LibrariesRequest.new(oclc_number).uri
-            expect(uri_actual).to eq(uri_expected)
-          end
-
-          it 'handles ASCII-encoded OCLC numbers' do
-            oclc_number_ascii = oclc_number.encode('US-ASCII')
-            uri_expected = URI.parse("#{wc_base_url}catalog/content/libraries/#{oclc_number}")
-            uri_actual = LibrariesRequest.new(oclc_number_ascii).uri
             expect(uri_actual).to eq(uri_expected)
           end
         end
@@ -98,19 +88,16 @@ module BerkeleyLibrary
 
             symbols = Symbols::ALL
             params = {
-              oclcsymbol: symbols.join(','),
-              servicelevel: 'full',
-              frbrGrouping: 'off',
-              wskey: wc_api_key
+              'oclcNumber' => oclc_number,
+              'heldBySymbol' => symbols.join(',')
             }
 
             req = LibrariesRequest.new(oclc_number)
 
-            stub_request(:get, req.uri)
-              .with(query: params).to_return(body: holdings_xml)
-
-            holdings_actual = req.execute
-            expect(holdings_actual).to contain_exactly(*holdings_expected)
+            VCR.use_cassette('libraries_request/execute_holdings_1') do
+              holdings_actual = req.execute
+              expect(holdings_actual).to contain_exactly(*holdings_expected)
+            end
           end
 
           it 'returns a specified subset of holdings' do
@@ -119,19 +106,16 @@ module BerkeleyLibrary
 
             symbols = Symbols::RLF
             params = {
-              oclcsymbol: symbols.join(','),
-              servicelevel: 'full',
-              frbrGrouping: 'off',
-              wskey: wc_api_key
+              'oclcNumber' => oclc_number,
+              'heldBySymbol' => symbols.join(',')
             }
 
             req = LibrariesRequest.new(oclc_number, symbols:)
 
-            stub_request(:get, req.uri)
-              .with(query: params).to_return(body: holdings_xml)
-
-            holdings_actual = req.execute
-            expect(holdings_actual).to contain_exactly(*holdings_expected)
+            VCR.use_cassette('libraries_request/execute_holdings_2') do
+              holdings_actual = req.execute
+              expect(holdings_actual).to contain_exactly(*holdings_expected)
+            end
           end
 
           # NOTE: WorldCat *shouldn't* return holdings information for any
@@ -142,19 +126,16 @@ module BerkeleyLibrary
 
             symbols = Symbols::UC
             params = {
-              oclcsymbol: symbols.join(','),
-              servicelevel: 'full',
-              frbrGrouping: 'off',
-              wskey: wc_api_key
+              'oclcNumber' => oclc_number,
+              'heldBySymbol' => symbols.join(',')
             }
 
             req = LibrariesRequest.new(oclc_number, symbols:)
 
-            stub_request(:get, req.uri)
-              .with(query: params).to_return(body: holdings_xml)
-
-            holdings_actual = req.execute
-            expect(holdings_actual).to contain_exactly(*holdings_expected)
+            VCR.use_cassette('libraries_request/execute_holdings_3') do
+              holdings_actual = req.execute
+              expect(holdings_actual).to contain_exactly(*holdings_expected)
+            end
           end
 
           it 'returns an empty list when no holdings are found' do
@@ -163,19 +144,16 @@ module BerkeleyLibrary
 
             symbols = Symbols::RLF
             params = {
-              oclcsymbol: symbols.join(','),
-              servicelevel: 'full',
-              frbrGrouping: 'off',
-              wskey: wc_api_key
+              'oclcNumber' => oclc_number,
+              'heldBySymbol' => symbols.join(',')
             }
 
             req = LibrariesRequest.new(oclc_number, symbols:)
 
-            stub_request(:get, req.uri)
-              .with(query: params).to_return(body: holdings_xml)
-
-            holdings_actual = req.execute
-            expect(holdings_actual).to be_empty
+            VCR.use_cassette('libraries_request/execute_holdings_4') do
+              holdings_actual = req.execute
+              expect(holdings_actual).to be_empty
+            end
           end
         end
       end

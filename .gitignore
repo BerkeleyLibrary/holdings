@@ -23,6 +23,9 @@ Gemfile.lock
 # Local test configuration
 .env
 
+# Ignore VCR Cassettes
+/spec/cassettes/
+
 ############################################################
 # Generated ignores
 
