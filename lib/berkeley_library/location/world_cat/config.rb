@@ -31,7 +31,6 @@ module BerkeleyLibrary
         # @param value [String] the API key.
         attr_writer :api_key, :api_secret
 
-
         # Gets the WorldCat API key.
         # @return [String, nil] the WorldCat API key, or `nil` if not set.
         def api_key

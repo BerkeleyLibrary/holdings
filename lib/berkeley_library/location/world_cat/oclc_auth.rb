@@ -9,11 +9,13 @@ module BerkeleyLibrary
 
         attr_accessor :token
 
-        def initialize()
-          @token ||= get_token()
+        def initialize
+          # rubocop:disable Lint/DisjunctiveAssignmentInConstructor
+          @token ||= fetch_token
+          # rubocop:enable Lint/DisjunctiveAssignmentInConstructor:
         end
 
-        def get_token
+        def fetch_token
           url = oclc_token_url
 
           http = Net::HTTP.new(url.host, url.port)
@@ -27,14 +29,10 @@ module BerkeleyLibrary
           JSON.parse(response.body, symbolize_names: true)
         end
 
-        def token
-          @token = get_token if token_expired?
-          @token
-        end
-
-        def token=(refreshed_token)
-          @token = refreshed_token
-        end
+        # def token
+        #   @token = get_token if token_expired?
+        #   @token
+        # end
 
         def oclc_token_url
           URI.parse("#{Config.token_uri}?#{URI.encode_www_form(token_params)}")
@@ -42,7 +40,7 @@ module BerkeleyLibrary
 
         # Before every request check if the token is expired (OCLC tokens expire after 20 minutes)
         def access_token
-          @token = get_token if token_expired?
+          @token = token if token_expired?
           @token[:access_token]
         end
 
@@ -57,6 +55,7 @@ module BerkeleyLibrary
 
         def token_expired?
           return true if @token.nil? || @token[:expires_at].nil?
+
           Time.parse(@token[:expires_at]) <= Time.now
         end
 

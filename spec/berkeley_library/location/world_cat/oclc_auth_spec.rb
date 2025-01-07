@@ -19,7 +19,8 @@ module BerkeleyLibrary
             # Need to set the token expiration to a time in the past
             token[:expires_at] = (Time.now - 1).to_s
             OCLCAuth.instance.token = token
-            access_token = OCLCAuth.instance.access_token
+
+            OCLCAuth.instance.access_token
 
             expect(OCLCAuth.instance.token[:access_token]).to be_a(String)
           end

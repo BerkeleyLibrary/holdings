@@ -15,7 +15,7 @@ module BerkeleyLibrary
 
         JPATH_INST_ID_VALS = '$.briefRecords[*].institutionHolding.briefHoldings[*].oclcSymbol'.freeze
 
-        attr_reader :oclc_number, :symbols, :oclc_token
+        attr_reader :oclc_number, :symbols
 
         def initialize(oclc_number, symbols: Symbols::ALL)
           @oclc_token = OCLCAuth.instance
@@ -42,7 +42,7 @@ module BerkeleyLibrary
 
         def execute
           response_body = URIs.get(uri, params:, headers:, log: false)
-          inst_symbols = inst_symbols_from(response_body)
+          inst_symbols_from(response_body)
         end
 
         private
@@ -50,7 +50,7 @@ module BerkeleyLibrary
         # OCLC changed to a token-based authentication system
         # separating auth from request
         def oclc_token
-          @oclc_token ||= OCLCAuth.new()
+          @oclc_token ||= OCLCAuth.new
         end
 
         def libraries_base_uri
@@ -59,7 +59,7 @@ module BerkeleyLibrary
 
         def inst_symbols_from(json)
           path = JsonPath.new(JPATH_INST_ID_VALS)
-          symbols = path.on(json)
+          path.on(json)
         end
       end
     end

@@ -17,37 +17,37 @@ module BerkeleyLibrary
             allow(instance).to receive(:rails_worldcat_base_url).and_call_original
           end
 
-          context "when rails_config is nil" do
+          context 'when rails_config is nil' do
             before do
               allow(instance).to receive(:rails_config).and_return(nil)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_base_url)).to be_nil
             end
           end
 
-          context "when rails_config does not respond to :worldcat_base_url" do
-            let(:mock_config) { double("Config") }
+          context 'when rails_config does not respond to :worldcat_base_url' do
+            let(:mock_config) { double('Config') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_base_url)).to be_nil
             end
           end
 
-          context "when rails_config responds to :worldcat_base_url" do
-            let(:mock_config) { double("Config", worldcat_base_url: "https://example.com") }
+          context 'when rails_config responds to :worldcat_base_url' do
+            let(:mock_config) { double('Config', worldcat_base_url: 'https://example.com') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns the worldcat_base_url" do
-              expect(instance.send(:rails_worldcat_base_url)).to eq("https://example.com")
+            it 'returns the worldcat_base_url' do
+              expect(instance.send(:rails_worldcat_base_url)).to eq('https://example.com')
             end
           end
         end
@@ -60,37 +60,37 @@ module BerkeleyLibrary
             allow(instance).to receive(:rails_oclc_token_url).and_call_original
           end
 
-          context "when rails_config is nil" do
+          context 'when rails_config is nil' do
             before do
               allow(instance).to receive(:rails_config).and_return(nil)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_oclc_token_url)).to be_nil
             end
           end
 
-          context "when rails_config does not respond to :rails_oclc_token_url" do
-            let(:mock_config) { double("Config") }
+          context 'when rails_config does not respond to :rails_oclc_token_url' do
+            let(:mock_config) { double('Config') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_oclc_token_url)).to be_nil
             end
           end
 
-          context "when rails_config responds to :rails_oclc_token_url" do
-            let(:mock_config) { double("Config", oclc_token_url: "https://example.com") }
+          context 'when rails_config responds to :rails_oclc_token_url' do
+            let(:mock_config) { double('Config', oclc_token_url: 'https://example.com') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns the oclc_token_url" do
-              expect(instance.send(:rails_oclc_token_url)).to eq("https://example.com")
+            it 'returns the oclc_token_url' do
+              expect(instance.send(:rails_oclc_token_url)).to eq('https://example.com')
             end
           end
         end
@@ -103,24 +103,24 @@ module BerkeleyLibrary
             allow(instance).to receive(:rails_worldcat_api_key).and_call_original
           end
 
-          context "when rails_config is nil" do
+          context 'when rails_config is nil' do
             before do
               allow(instance).to receive(:rails_config).and_return(nil)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_api_key)).to be_nil
             end
           end
 
-          context "when rails_config does not respond to :worldcat_api_key" do
-            let(:mock_config) { double("Config") }
+          context 'when rails_config does not respond to :worldcat_api_key' do
+            let(:mock_config) { double('Config') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_api_key)).to be_nil
             end
           end
@@ -133,24 +133,24 @@ module BerkeleyLibrary
             allow(instance).to receive(:rails_worldcat_api_secret).and_call_original
           end
 
-          context "when rails_config is nil" do
+          context 'when rails_config is nil' do
             before do
               allow(instance).to receive(:rails_config).and_return(nil)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_api_secret)).to be_nil
             end
           end
 
-          context "when rails_config does not respond to :worldcat_api_secret" do
-            let(:mock_config) { double("Config") }
+          context 'when rails_config does not respond to :worldcat_api_secret' do
+            let(:mock_config) { double('Config') }
 
             before do
               allow(instance).to receive(:rails_config).and_return(mock_config)
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_worldcat_api_secret)).to be_nil
             end
           end
@@ -163,22 +163,22 @@ module BerkeleyLibrary
             allow(instance).to receive(:rails_config).and_call_original
           end
 
-          context "when Rails is not defined" do
+          context 'when Rails is not defined' do
             before do
-              hide_const("Rails")
+              hide_const('Rails')
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_config)).to be_nil
             end
           end
 
-          context "when Rails.application is nil" do
+          context 'when Rails.application is nil' do
             before do
-              stub_const("Rails", double("Rails", application: nil))
+              stub_const('Rails', double('Rails', application: nil))
             end
 
-            it "returns nil" do
+            it 'returns nil' do
               expect(instance.send(:rails_config)).to be_nil
             end
           end
@@ -186,9 +186,9 @@ module BerkeleyLibrary
 
         describe 'Rails Fallbacks' do
           around do |example|
-            preserved_key = ENV['LIT_WORLDCAT_API_KEY']
-            preserved_secret = ENV['LIT_WORLDCAT_API_SECRET']
-            preserved_base = ENV['LIT_WORLDCAT_BASE_URL']
+            preserved_key = ENV.fetch('LIT_WORLDCAT_API_KEY', nil)
+            preserved_secret = ENV.fetch('LIT_WORLDCAT_API_SECRET', nil)
+            preserved_base = ENV.fetch('LIT_WORLDCAT_BASE_URL', nil)
 
             ENV['LIT_WORLDCAT_API_KEY'] = nil
             ENV['LIT_WORLDCAT_API_SECRET'] = nil
@@ -363,26 +363,6 @@ module BerkeleyLibrary
                 expect(Config.api_key).to eq(expected_key)
               end
             end
-
-            # These tests are no longer valid as the Config.api_key is now required for VCR
-            context 'with partial Rails config' do
-              # it "doesn't blow up if Rails exists but has no application" do
-              #   allow(Rails).to receive(:application).and_return(nil)
-              #   expect(Config.api_key).to be_nil
-              # end
-
-              # it "doesn't blow up if Rails configuration does not include URL" do
-              #   app = double(Object)
-              #   allow(Rails).to receive(:application).and_return(app)
-
-              #   config = double(Object)
-              #   allow(app).to receive(:config).and_return(config)
-
-              #   expect(Config.api_key).to be_nil
-              # end
-            end
-
-
           end
         end
 

@@ -71,8 +71,6 @@ module BerkeleyLibrary
           end
         end
 
-        # How to handle these tests... now the oclc number is passed as a parameter
-        # and NOT in the URI...so these are kind of moot.
         describe :uri do
           it 'returns the URI for the specified OCLC number' do
             uri_expected = URI.parse("#{wc_base_url}bibs-holdings")
@@ -83,15 +81,7 @@ module BerkeleyLibrary
 
         describe :execute do
           it 'returns the holdings' do
-            holdings_xml = File.read('spec/data/worldcat/85833285-all.xml')
             holdings_expected = %w[CUI CUY MERUC ZAP]
-
-            symbols = Symbols::ALL
-            params = {
-              'oclcNumber' => oclc_number,
-              'heldBySymbol' => symbols.join(',')
-            }
-
             req = LibrariesRequest.new(oclc_number)
 
             VCR.use_cassette('libraries_request/execute_holdings_1') do
@@ -101,15 +91,8 @@ module BerkeleyLibrary
           end
 
           it 'returns a specified subset of holdings' do
-            holdings_xml = File.read('spec/data/worldcat/85833285-rlf.xml')
             holdings_expected = %w[ZAP]
-
             symbols = Symbols::RLF
-            params = {
-              'oclcNumber' => oclc_number,
-              'heldBySymbol' => symbols.join(',')
-            }
-
             req = LibrariesRequest.new(oclc_number, symbols:)
 
             VCR.use_cassette('libraries_request/execute_holdings_2') do
@@ -121,15 +104,8 @@ module BerkeleyLibrary
           # NOTE: WorldCat *shouldn't* return holdings information for any
           #       but the requested symbols, but we filter just in case.
           it "returns only the requested symbols, even if OCLC doesn't" do
-            holdings_xml = File.read('spec/data/worldcat/85833285-all.xml')
             holdings_expected = %w[CUI CUY MERUC]
-
             symbols = Symbols::UC
-            params = {
-              'oclcNumber' => oclc_number,
-              'heldBySymbol' => symbols.join(',')
-            }
-
             req = LibrariesRequest.new(oclc_number, symbols:)
 
             VCR.use_cassette('libraries_request/execute_holdings_3') do
@@ -140,14 +116,7 @@ module BerkeleyLibrary
 
           it 'returns an empty list when no holdings are found' do
             oclc_number = '10045193'
-            holdings_xml = File.read('spec/data/worldcat/10045193-rlf.xml')
-
             symbols = Symbols::RLF
-            params = {
-              'oclcNumber' => oclc_number,
-              'heldBySymbol' => symbols.join(',')
-            }
-
             req = LibrariesRequest.new(oclc_number, symbols:)
 
             VCR.use_cassette('libraries_request/execute_holdings_4') do
