@@ -29,10 +29,10 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'berkeley_library-logging', '~> 0.2'
   spec.add_dependency 'berkeley_library-util', '~> 0.1', '>= 0.1.9'
+  spec.add_dependency 'jsonpath', '~> 0.5.8'
   spec.add_dependency 'marcel', '~> 1.0.2'
   spec.add_dependency 'rest-client', '~> 2.1'
   spec.add_dependency 'rubyXL', '~> 3.4'
-  spec.add_dependency 'jsonpath', '~> 0.5.8'
 
   spec.add_development_dependency 'bundle-audit', '~> 0.1'
   spec.add_development_dependency 'ci_reporter_rspec', '~> 1.0'

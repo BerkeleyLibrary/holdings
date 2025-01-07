@@ -15,16 +15,26 @@ VCR.configure do |config|
   config.hook_into :webmock # Use WebMock for HTTP request interception
   config.ignore_localhost = true # Allow localhost connections without VCR
   config.configure_rspec_metadata! # Automatically tag RSpec examples with VCR metadata
-  
-  # Optionally, filter sensitive data (like API keys) from cassettes
-  config.filter_sensitive_data('<API_KEY>') { ENV['API_KEY'] }
-  config.filter_sensitive_data('<API_SECRET>') { ENV['API_SECRET'] }
-  
+
+  # Filter sensitive data from cassettes
+  config.filter_sensitive_data('<API_KEY>') { ENV.fetch('LIT_WORLDCAT_API_KEY', nil) }
+  config.filter_sensitive_data('<API_SECRET>') { ENV.fetch('LIT_WORLDCAT_API_SECRET', nil) }
+
   # Allow external connections to specific URLs if needed
   config.allow_http_connections_when_no_cassette = true
 
   # Only record new cassettes when we explicitly allow it
-  config.default_cassette_options = { record: :once }
+  config.default_cassette_options = {
+    record: ENV.fetch('RE_RECORD_VCR', 'false') == 'true' ? :all : :once
+  }
+
+  # Log debug info to a separate file...if you want
+  # config.debug_logger = File.open('spec/vcr_debug.log', 'w')
+
+  # Mask Authorization headers
+  config.before_record do |i|
+    i.request.headers['Authorization'] = ['<AUTHORIZATION>'] if i.request.headers['Authorization']
+  end
 end
 
 RSpec.configure do |config|
