@@ -20,6 +20,10 @@ jobs:
           bundler-cache: true
 
       - name: Run checks
+        env:
+          RE_RECORD_VCR: ${{ vars.RE_RECORD_VCR }}
+          LIT_WORLDCAT_API_KEY: ${{ secrets.LIT_WORLDCAT_API_KEY }}
+          LIT_WORLDCAT_API_SECRET: ${{ secrets.LIT_WORLDCAT_API_SECRET }}
         run: bundle exec rake
 
       - name: Upload artifacts
