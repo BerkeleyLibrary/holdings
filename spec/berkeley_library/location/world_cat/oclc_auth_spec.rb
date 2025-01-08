@@ -25,6 +25,15 @@ module BerkeleyLibrary
             expect(OCLCAuth.instance.token[:access_token]).to be_a(String)
           end
         end
+
+        describe '#token_expired?' do
+          subject(:oclc_auth) { described_class.instance }
+
+          it 'returns true if @token is nil' do
+            oclc_auth.instance_variable_set(:@token, nil)
+            expect(oclc_auth.send(:token_expired?)).to be true
+          end
+        end
       end
     end
   end
