@@ -23,6 +23,9 @@ Gemfile.lock
 # Local test configuration
 .env
 
+# Ignore VCR Logs
+vcr_debug.log
+
 ############################################################
 # Generated ignores
 

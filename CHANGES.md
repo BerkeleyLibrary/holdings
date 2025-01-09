@@ -1,3 +1,8 @@
+# 4.0.0 (2025-01-08)
+
+- Update from Worldcat API v1 to API v2
+- Changed some of the tests from mocks to use VCR
+
 # 3.0.0 (2023-10-10)
 
 - Support duplicate OCLC numbers
