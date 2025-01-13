@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://oauth.oclc.org/token?grant_type=client_credentials&scope=wcapi:view_institution_holdings
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - application/json
+      User-Agent:
+      - Ruby
+      Authorization:
+      - "<AUTHORIZATION>"
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      X-Oclc-Requestid:
+      - 471bbf56-055b-4040-9c39-080ba32dabcd
+      X-Oclc-Selfid:
+      - a7a2a1c5-57b2-447f-8598-64e7ae7a7947
+      Set-Cookie:
+      - BIGipServermdc1_prdctn_p_oauth-m1-wskeyv3ws-443_8443=3660704266.64288.0000;
+        expires=Sat, 11-Jan-2025 00:14:58 GMT; path=/; Httponly; Secure
+      - JSESSIONID=634BDBCD22463783C6634B41F69E7650; Path=/; Secure; HttpOnly; SameSite=None
+      Vary:
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
+      Cache-Control:
+      - no-store
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=31536000 ; includeSubDomains
+      X-Xss-Protection:
+      - '0'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Content-Type:
+      - application/json;charset=UTF-8
+      Transfer-Encoding:
+      - chunked
+      Date:
+      - Fri, 10 Jan 2025 23:14:57 GMT
+    body:
+      encoding: UTF-8
+      string: '{"access_token":"tk_rqkymSEsOeMKWgexlfy1GrXu4NcPH2yI4ysU","expires_at":"2025-01-10
+        23:34:58Z","authenticating_institution_id":"5689","scope":"wcapi:view_institution_holdings","principalID":"","context_institution_id":"5689","scopes":"wcapi:view_institution_holdings","token_type":"bearer","expires_in":1199,"principalIDNS":""}'
+  recorded_at: Fri, 10 Jan 2025 23:14:58 GMT
+recorded_with: VCR 6.3.1
